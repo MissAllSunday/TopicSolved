@@ -42,7 +42,76 @@ function __autoload($class_name)
 class TopicSolved
 {
 	public static $_name = 'TopicSolved';
-	public static $_folder = 'TopicSolved/';
+	public static $_folder = '/TopicSolved/';
+
+	function changeStatus($topic, $status)
+	{
+		global $board, $board_info, $user_info;
+
+		// We can't do this without a topic.
+		if (empty($topic))
+			fatal_lang_error('TopicSolved_not_a_topic', false);
+
+		// Better safe than sorry...
+		checkSession('get');
+
+		// Make sure that we are in a "topic solved" board.
+		if (!$board_info['topic_solved'])
+			fatal_lang_error('topic_solved_no_board', false);
+
+		// Let's get some info about the topic.
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member_started, id_first_msg, id_last_msg, is_solved
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:topic}
+			LIMIT {int:limit}',
+			array(
+				'topic' => $topic,
+				'limit' => 1,
+			)
+		);
+		$row = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($request);
+
+		// Check if he is allowed.
+		if (!allowedTo('solve_topic_any') && $user_info['id'] == $row['id_member_started'])
+			isAllowedTo('solve_topic_own');
+		else
+			isAllowedTo('solve_topic_any');
+
+		// Change the status.
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET is_solved = {int:is_solved}
+			WHERE id_topic = {int:topic}
+			LIMIT {int:limit}',
+			array(
+				'topic' => $topic,
+				'is_solved' => empty($row['is_solved']) ? 1 : 0,
+				'limit' => 1,
+			)
+		);
+
+		// Change the icon.
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}messages
+			SET icon = {string:icon}
+			WHERE id_msg = {int:msg}
+			LIMIT {int:limit}',
+			array(
+				'msg' => $row['id_first_msg'],
+				'icon' => empty($row['is_solved']) ? 'topicsolved' : 'xx',
+				'limit' => 1,
+			)
+		);
+
+		// Do some logging, only for moderators though...
+		if ($user_info['id'] != $row['id_member_started'])
+			logAction(empty($row['is_solved']) ? 'solve' : 'not_solve', array('topic' => $topic, 'board' => $board), 'topic_solved');
+
+		// Take us back to last post.
+		redirectexit('topic=' . $topic . '.msg' . $row['id_last_msg'] . '#new');
+	}
 
 	static public function tools()
 	{
@@ -134,46 +203,30 @@ class TopicSolved
 
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', 'share_all_messages', 'subtext' => $txt['share_all_messages_sub']),
-			array('check', 'share_disable_jquery', 'subtext' => $txt['share_disable_jquery_sub']),
-			array('text', 'share_options_boards', 'size' => 36, 'subtext' => $txt['share_options_boards_sub']),
-			array(
-				'select',
-				'share_options_position', array(
-					'below' => $txt['share_options_position_below'],
-					'above' => $txt['share_options_position_above']
-				),
-				'subtext' => $txt['share_options_position_sub']
-			),
-			array('int', 'share_options_show_space', 'size' => 3, 'subtext' => $txt['share_options_show_space_sub']),
-			'',
-			array('check', 'share_addthisbutton_enable', 'subtext' => $txt['share_addthisbutton_enable_sub']),
+			array('check', TopicSolved::_$name .'_enable', 'subtext' => self::tools()->getText('enable_sub')),
+			array('text', TopicSolved::_$name .'_boards', 'size' => 36, 'subtext' => self::tools()->getText('boards_sub')),
 		);
 
 		if ($return_config)
 			return $config_vars;
 
 		/* Set some settings for the page */
-		$context['post_url'] = $scripturl . '?action=admin;area=sharethis;sa=general;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=general;save';
 		$context['page_title'] = $txt['share_default_menu'];
 
 		if (isset($_GET['save']))
 		{
 			/* Clean the boards var, we only want integers and nothing else! */
-			if (!empty($_POST['share_options_boards']))
+			if (!empty($_POST[TopicSolved::_$name .'_boards']))
 			{
-				$share_options_boards = explode(',', preg_replace('/[^0-9,]/', '', $_POST['share_options_boards']));
+				$tsBoards = explode(',', preg_replace('/[^0-9,]/', '', $_POST[TopicSolved::_$name .'_boards']));
 
-				foreach ($share_options_boards as $key => $value)
+				foreach ($tsBoards as $key => $value)
 					if ($value == '')
-						unset($share_options_boards[$key]);
+						unset($tsBoards[$key]);
 
-				$_POST['share_options_boards'] = implode(',', $share_options_boards);
+				$_POST[TopicSolved::_$name .'_boards'] = implode(',', $tsBoards);
 			}
-
-			/* If for some reason the user put something like this:  12px, then remove the "px" part, we want only numbers! */
-			if (!empty($_POST['share_options_show_space']))
-				$_POST['share_options_show_space'] = preg_replace('/[^0-9,]/', '', $_POST['share_options_show_space']);
 
 			/* Save the settings */
 			checkSession();
@@ -204,15 +257,7 @@ class TopicSolved
 
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', 'share_buttons_enable', 'subtext' => $txt['share_buttons_enable_sub']),
-			'',
-			array('check', 'share_plusone_enable'),
-			array('check', 'share_twibutton_enable'),
-			array('check', 'share_likebutton_enable'),
-			array('check', 'share_addthismessages_enable', 'subtext' => $txt['share_addthismessages_enable_sub']),
-			'',
-			$txt['share_twitter_options_dec'],
-			array('text', 'share_twitter_options_via', 'size' => 20, 'subtext' => $txt['share_twitter_options_via_sub']),
+			array('text', TopicSolved::_$name .'_solvedColor', 'size' => 20, 'subtext' => $txt['share_twitter_options_via_sub']),
 		);
 
 		if ($return_config)
@@ -225,9 +270,9 @@ class TopicSolved
 		/* Save */
 		if (isset($_GET['save']))
 		{
-			/* Just an extra check... */
-			if (isset($_POST['share_twitter_options_via']))
-				$_POST['share_twitter_options_via'] = str_replace('@', '', $_POST['share_twitter_options_via']);
+			/* We will accept only an hexadecimal number here */
+			if (!empty($_POST['share_options_show_space']))
+				$_POST['share_options_show_space'] = preg_replace('/[^0-9,]/', '', $_POST['share_options_show_space']);
 
 			checkSession();
 			saveDBSettings($config_vars);
