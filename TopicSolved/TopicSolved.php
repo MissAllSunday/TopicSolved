@@ -43,8 +43,13 @@ class TopicSolved
 {
 	public static $_name = 'TopicSolved';
 	public static $_folder = '/TopicSolved/';
+	protected static $_status = array(
+		'solved' => 1,
+		'not_solved' => 2,
+		'waiting_response' = 3,
+	);
 
-	function changeStatus($topic, $status)
+	static function changeStatus()
 	{
 		global $board, $board_info, $user_info;
 
@@ -279,6 +284,11 @@ class TopicSolved
 			redirectexit('action=admin;area=sharethis;sa=buttons');
 		}
 		prepareDBSettingContext($config_vars);
+	}
+
+	public static function actions(&$actions)
+	{
+		$actions['topicsolved'] = array(TopicSolved::$_folder .'Subs-TopicSolved.php', 'TopicSolved::changeStatus');
 	}
 
 	/**
