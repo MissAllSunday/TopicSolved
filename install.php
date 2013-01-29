@@ -55,8 +55,7 @@ $smcFunc['db_insert'](
 
 db_extend('packages');
 
-// Add the column for figuring out if we've done this user before
-//$smcFunc['db_add_column'] (table_name, column_into, parameters, if_exists, error)
+/* Add the column */
 $smcFunc['db_add_column'](
 	'{db_prefix}topics',
 	array(
