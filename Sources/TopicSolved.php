@@ -30,7 +30,7 @@ function getTopicStatus($topic)
 {
 	global $smcFunc;
 
-	if empty($topic) || is_numeric((int) $topic)
+	if empty($topic) || !is_numeric((int) $topic)
 		return false;
 
 	/* Cache is empty, get the info */
@@ -47,14 +47,7 @@ function getTopicStatus($topic)
 			)
 		);
 
-		while ($row = $smcFunc['db_fetch_assoc']($result))
-			$return = array(
-				'id_member_started' => $row['id_member_started'],
-				'id_first_msg' => $row['id_first_msg'],
-				'id_last_msg' => $row['id_last_msg'],
-				'is_solved' => $row['is_solved'],
-			);
-
+		$return = $smcFunc['db_fetch_assoc']($request);
 		$smcFunc['db_free_result']($result);
 
 		/* Cache this beauty */
