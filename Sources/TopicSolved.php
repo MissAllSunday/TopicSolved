@@ -29,6 +29,7 @@ class TopicSolved
 {
 	protected static $name = 'TopicSolved';
 	protected $topic = 0;
+	protected $topicInfo = array();
 
 	public function __construct($topic = 0)
 	{
@@ -38,13 +39,13 @@ class TopicSolved
 
 	public static function call()
 	{
-			checkSession('get');
+		checkSession('get');
 
+		/* Get the topic ID */
 		$temp = !empty($_GET['topic']) && is_numeric($_GET['topic']) ? (int) trim($_GET['topic']) : 0;
 
 		$topic = new self($temp);
 		$topic->changeStatus();
-		$topic->finish();
 	}
 
 	protected function getTopicStatus($topic = null)
@@ -56,7 +57,7 @@ class TopicSolved
 			$this->topic = (int) $topic;
 
 		/* Cache is empty, get the info */
-		if (($return = cache_get_data(self::$name .'-' . $topic, 120)) == null)
+		if (($this->topicInfo = cache_get_data(self::$name .'-' . $topic, 120)) == null)
 		{
 			$request = $smcFunc['db_query']('', '
 				SELECT id_member_started, id_first_msg, id_last_msg, is_solved
@@ -69,19 +70,34 @@ class TopicSolved
 				)
 			);
 
-			$return = $smcFunc['db_fetch_assoc']($request);
+			$this->topicInfo = $smcFunc['db_fetch_assoc']($request);
 			$smcFunc['db_free_result']($result);
 
 			/* Cache this beauty */
-			cache_put_data(self::$name .'-' . $topic, $return, 120);
+			cache_put_data(self::$name .'-' . $topic, $this->topicInfo, 120);
 		}
 
-		return $return;
+		return $this->topicInfo;
 	}
 
 	public function changeStatus($topic)
 	{
 
-		checkSession('get');
+		/* Get the topic info */
+		$this->getTopicStatus();
+
+		/* Apply permissions */
+		$this->checkPermissions();
+	}
+
+	protected function checkPermissions()
+	{
+		global $user_info;
+
+		if (!allowedTo('solve_topic_any') && $user_info['id'] == $this->topicInfo['id_member_started'])
+			isAllowedTo('solve_topic_own');
+
+		else
+			isAllowedTo('solve_topic_any');
 	}
 }
