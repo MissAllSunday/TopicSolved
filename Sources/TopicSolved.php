@@ -25,34 +25,63 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-
-function getTopicStatus($topic)
+class TopicSolved
 {
-	global $smcFunc;
+	protected static $name = 'TopicSolved';
+	protected $topic = 0;
 
-	if empty($topic) || !is_numeric((int) $topic)
-		return false;
-
-	/* Cache is empty, get the info */
-	if (($return = cache_get_data('TopicSolved:' . $topic, 120)) == null)
+	public function __construct($topic = 0)
 	{
-		$request = $smcFunc['db_query']('', '
-			SELECT id_member_started, id_first_msg, id_last_msg, is_solved
-			FROM {db_prefix}topics
-			WHERE id_topic = {int:topic}
-			LIMIT {int:limit}',
-			array(
-				'topic' => $topic,
-				'limit' => 1,
-			)
-		);
-
-		$return = $smcFunc['db_fetch_assoc']($request);
-		$smcFunc['db_free_result']($result);
-
-		/* Cache this beauty */
-		cache_put_data('TopicSolved:' . $topic, $return, 120);
+		if (!empty($topic)
+			$this->topic = (int) $topic;
 	}
 
-	return $return;
+	public static function call()
+	{
+			checkSession('get');
+
+		$temp = !empty($_GET['topic']) && is_numeric($_GET['topic']) ? (int) trim($_GET['topic']) : 0;
+
+		$topic = new self($temp);
+		$topic->changeStatus();
+		$topic->finish();
+	}
+
+	protected function getTopicStatus($topic = null)
+	{
+		global $smcFunc;
+
+		/* Overwrite the global $topic */
+		if !empty($topic) || is_numeric((int) $topic)
+			$this->topic = (int) $topic;
+
+		/* Cache is empty, get the info */
+		if (($return = cache_get_data(self::$name .'-' . $topic, 120)) == null)
+		{
+			$request = $smcFunc['db_query']('', '
+				SELECT id_member_started, id_first_msg, id_last_msg, is_solved
+				FROM {db_prefix}topics
+				WHERE id_topic = {int:topic}
+				LIMIT {int:limit}',
+				array(
+					'topic' => $this->topic,
+					'limit' => 1,
+				)
+			);
+
+			$return = $smcFunc['db_fetch_assoc']($request);
+			$smcFunc['db_free_result']($result);
+
+			/* Cache this beauty */
+			cache_put_data(self::$name .'-' . $topic, $return, 120);
+		}
+
+		return $return;
+	}
+
+	public function changeStatus($topic)
+	{
+
+		checkSession('get');
+	}
 }
