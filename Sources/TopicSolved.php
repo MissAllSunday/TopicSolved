@@ -84,45 +84,25 @@ class TopicSolved
 	{
 		global $smcFunc;
 
-		$topic = empty($topic) ? $this->topic ? $topic;
-
 		if (empty($status))
 			return false;
 
 		/* Apply permissions */
 		$this->checkPermissions();
 
-		/* Is $topic an array?  */
-		if (!empty($topic) && is_array($topic))
-		{
-			/* By default sets an empty array */
-			$array = array();
+		/* Make the change */
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET is_solved = {int:is_solved}
+			'. is_array($topic) ? 'WHERE id_topic in({array:array})' : 'WHERE id_topic = {int:topic}' .'
+			LIMIT {int:limit}',
+			array(
+				'topic' => empty($topic) ? $this->topic ? $topic,
+				'is_solved' => $status,
+				'array' => $topic,
+			)
+		);
 
-			foreach ($topic as $t)
-				$array[] = $this->getTopicStatus($t);
-
-
-		}
-
-		else if (!empty($topic) && is_numeric($topic))
-		{
-			$this->getTopicStatus();
-
-			/* Make the change */
-			$smcFunc['db_query']('', '
-				UPDATE {db_prefix}topics
-				SET is_solved = {int:is_solved}
-				WHERE id_topic = {int:topic}
-				LIMIT {int:limit}',
-				array(
-					'topic' => $topic,
-					'is_solved' => empty($row['is_solved']) ? 1 : 0,
-					'limit' => 1,
-				)
-			);
-		}
-
-		/* Its all good */
 	}
 
 	protected function checkPermissions()
