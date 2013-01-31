@@ -80,14 +80,49 @@ class TopicSolved
 		return $this->topicInfo;
 	}
 
-	public function changeStatus($topic)
+	public function changeStatus($topic = null, $status = null)
 	{
+		global $smcFunc;
 
-		/* Get the topic info */
-		$this->getTopicStatus();
+		$topic = empty($topic) ? $this->topic ? $topic;
+
+		if (empty($status))
+			return false;
 
 		/* Apply permissions */
 		$this->checkPermissions();
+
+		/* Is $topic an array?  */
+		if (!empty($topic) && is_array($topic))
+		{
+			/* By default sets an empty array */
+			$array = array();
+
+			foreach ($topic as $t)
+				$array[] = $this->getTopicStatus($t);
+
+
+		}
+
+		else if (!empty($topic) && is_numeric($topic))
+		{
+			$this->getTopicStatus();
+
+			/* Make the change */
+			$smcFunc['db_query']('', '
+				UPDATE {db_prefix}topics
+				SET is_solved = {int:is_solved}
+				WHERE id_topic = {int:topic}
+				LIMIT {int:limit}',
+				array(
+					'topic' => $topic,
+					'is_solved' => empty($row['is_solved']) ? 1 : 0,
+					'limit' => 1,
+				)
+			);
+		}
+
+		/* Its all good */
 	}
 
 	protected function checkPermissions()
@@ -103,10 +138,6 @@ class TopicSolved
 
 	public static function permissions($permissionGroups, $permissionList)
 	{
-		$permissionList['membergroup']['breeze_edit_settings_any'] = array(
-			false,
-			'breeze_per_classic',
-			'breeze_per_simple');
 		$permissionGroups['membergroup']['simple'] = array('topicsolved_per_simple');
 		$permissionGroups['membergroup']['classic'] = array('topicsolved_per_classic');
 		$permissionList['membergroup']['solve_topic_own'] = array(
