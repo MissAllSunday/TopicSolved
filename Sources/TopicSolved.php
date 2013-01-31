@@ -100,4 +100,22 @@ class TopicSolved
 		else
 			isAllowedTo('solve_topic_any');
 	}
+
+	public static function permissions($permissionGroups, $permissionList)
+	{
+		$permissionList['membergroup']['breeze_edit_settings_any'] = array(
+			false,
+			'breeze_per_classic',
+			'breeze_per_simple');
+		$permissionGroups['membergroup']['simple'] = array('topicsolved_per_simple');
+		$permissionGroups['membergroup']['classic'] = array('topicsolved_per_classic');
+		$permissionList['membergroup']['solve_topic_own'] = array(
+			false,
+			'topicsolved_per_classic',
+			'topicsolved_per_simple');
+		$permissionList['membergroup']['solve_topic_any'] = array(
+			false,
+			'topicsolved_per_classic',
+			'topicsolved_per_simple');
+	}
 }
