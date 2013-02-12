@@ -23,7 +23,7 @@
  */
 
 if (!defined('SMF'))
-	die('Hacking attempt...');
+	die('No direct access!');
 
 global $txt, $scripturl;
 
