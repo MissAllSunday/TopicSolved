@@ -4,15 +4,13 @@
 	<id>Suki:TopicSolved</id>
 	<version>1.2</version>
 	<file name="$sourcedir/Admin.php">
+
+		<!-- There is no hook for this on 2.0... -->
 		<operation>
-			<search position="replace"><![CDATA['modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),]]></search>
-			<add><![CDATA['modlog' => array($txt['moderation_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),
-						'topicsolvedlog' => array($txt['topic_solved_log'], 'admin_forum', 'enabled' => in_array('ml', $context['admin_features'])),]]></add>
-		</operation>
-		<operation>
-			<search position="replace"><![CDATA['modlog' => array('Modlog.php', 'ViewModlog'),]]></search>
-			<add><![CDATA['modlog' => array('Modlog.php', 'ViewModlog'),
-		'topicsolvedlog' => array('Modlog.php', 'ViewModlog'),]]></add>
+			<search position="replace"><![CDATA[$sub_action =]]></search>
+			<add><![CDATA[call_integration_hook('integrate_manage_logs', array($log_functions));
+
+	$sub_action =]]></add>
 		</operation>
 		<operation>
 			<search position="replace"><![CDATA['modlog' => array(
