@@ -43,9 +43,10 @@ class TopicSolved
 
 		/* Get the topic ID */
 		$temp = !empty($_GET['topic']) && is_numeric($_GET['topic']) ? (int) trim($_GET['topic']) : 0;
+		$status = !empty($_GET['status']) && is_numeric($_GET['status']) ? (int) trim($_GET['status']) : 0;
 
-		$topic = new self($temp);
-		$topic->changeStatus();
+		$topic = new self();
+		$topic->changeStatus($temp, $status);
 	}
 
 	protected function getTopicStatus($topic = null)
@@ -102,7 +103,6 @@ class TopicSolved
 				'array' => $topic,
 			)
 		);
-
 	}
 
 	protected function checkPermissions()
