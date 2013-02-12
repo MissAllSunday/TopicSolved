@@ -12,15 +12,4 @@
 
 	$sub_action =]]></add>
 		</operation>
-		<operation>
-			<search position="replace"><![CDATA['modlog' => array(
-				'description' => $txt['moderation_log_desc'],
-			),]]></search>
-			<add><![CDATA['modlog' => array(
-				'description' => $txt['moderation_log_desc'],
-			),
-			'topicsolvedlog' => array(
-				'description' => $txt['topic_solved_desc'],
-			),]]></add>
-		</operation>
 	</file>
