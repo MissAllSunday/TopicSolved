@@ -31,7 +31,7 @@ else if(!defined('SMF'))
 if ((SMF == 'SSI') && !$user_info['is_admin'])
 	die('Admin priveleges required.');
 
-/* This mod needs PHP 5.3 or greater, sorry... */
+/* This mod needs PHP 5.2 or greater, sorry... */
 topicsolvedCheck();
 
 /* Create the scheduled task */
