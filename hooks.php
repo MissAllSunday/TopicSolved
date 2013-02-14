@@ -33,6 +33,7 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 
 	$hooks = array(
 		'integrate_pre_include' => '$sourcedir/TopicSolved.php',
+		'integrate_pre_include' => '$sourcedir/Subs-TopicSolved.php',
 		'integrate_admin_areas' => 'topic_solved_admin',
 		'integrate_manage_logs' => 'topic_solved_logs'
 	);
