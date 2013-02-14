@@ -32,8 +32,9 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 	die('Admin priveleges required.');
 
 	$hooks = array(
-		'integrate_pre_include' => '$sourcedir/ShareThis.php',
-		'integrate_admin_areas' => 'ShareThis::Admin',
+		'integrate_pre_include' => '$sourcedir/TopicSolved.php',
+		'integrate_admin_areas' => 'TopicSolved::admin',
+		'integrate_manage_logs' => 'TopicSolved::logs'
 	);
 
 	foreach ($hooks as $hook => $function)
