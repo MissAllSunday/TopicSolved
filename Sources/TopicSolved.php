@@ -24,3 +24,13 @@
 
 if (!defined('SMF'))
 	die('No direct access!');
+
+function topic_solved_admin()
+{
+
+}
+
+function topic_solved_logs()
+{
+
+}
