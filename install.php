@@ -54,7 +54,6 @@ $smcFunc['db_insert'](
 		'id_task',
 	)
 );
-}
 
 db_extend('packages');
 

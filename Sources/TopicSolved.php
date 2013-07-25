@@ -28,10 +28,11 @@ if (!defined('SMF'))
 class TopicSolved
 {
 	protected static $name = 'TopicSolved';
-	protected $topic = 0;
+	protected $topics = array();
 	protected $topicInfo = array();
+	public static $status= array('solved' => 1, 'notSolved' => 2, 'waiting' => 3)
 
-	public function __construct($topic = 0, $status = 0)
+	public function __construct($topic = 0)
 	{
 		if (!empty($topic)
 			$this->topic = (int) $topic;
@@ -44,12 +45,7 @@ class TopicSolved
 	{
 		checkSession('get');
 
-		/* Get the topic ID */
-		$temp = !empty($_GET['topic']) && is_numeric($_GET['topic']) ? (int) trim($_GET['topic']) : 0;
-		$status = !empty($_GET['status']) && is_numeric($_GET['status']) ? (int) trim($_GET['status']) : 0;
-
 		$object = new self();
-
 		$topic = $object->getData('topic');
 		$status = $object->getData('status');
 
@@ -57,36 +53,28 @@ class TopicSolved
 			$object->changeStatus($topic, $status);
 	}
 
-	protected function getTopicStatus($topic = null)
+	protected function getTopicInfo($topic = null)
 	{
 		global $smcFunc;
 
-		/* Overwrite the global $topic */
-		if !empty($topic) || is_numeric((int) $topic)
-			$this->topic = (int) $topic;
+		// Work with a local var
+		$localTopic = !empty($topic) ? $topic : $this->topic;
 
-		/* Cache is empty, get the info */
-		if (($this->topicInfo = cache_get_data(self::$name .'-' . $topic, 120)) == null)
-		{
-			$request = $smcFunc['db_query']('', '
-				SELECT id_member_started, id_first_msg, id_last_msg, is_solved
-				FROM {db_prefix}topics
-				WHERE id_topic = {int:topic}
-				LIMIT {int:limit}',
-				array(
-					'topic' => $this->topic,
-					'limit' => 1,
-				)
-			);
+		$request = $smcFunc['db_query']('', '
+			SELECT id_member_started, id_first_msg, id_last_msg, is_solved
+			FROM {db_prefix}topics
+			WHERE id_topic = {int:topic}
+			LIMIT {int:limit}',
+			array(
+				'topic' => $localTopic,
+				'limit' => 1,
+			)
+		);
 
-			$this->topicInfo = $smcFunc['db_fetch_assoc']($request);
-			$smcFunc['db_free_result']($result);
+		$this->topicInfo[$localTopic] = $smcFunc['db_fetch_assoc']($request);
+		$smcFunc['db_free_result']($result);
 
-			/* Cache this beauty */
-			cache_put_data(self::$name .'-' . $topic, $this->topicInfo, 120);
-		}
-
-		return $this->topicInfo;
+		return $this->topicInfo[$localTopic];
 	}
 
 	public function changeStatus($topic = null, $status = null)
@@ -98,6 +86,9 @@ class TopicSolved
 
 		/* Apply permissions */
 		$this->checkPermissions();
+		
+		// Work with arrays
+		$topic 
 
 		/* Make the change */
 		$smcFunc['db_query']('', '
