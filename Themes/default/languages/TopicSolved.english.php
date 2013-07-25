@@ -29,12 +29,13 @@ global $txt, $scripturl;
 
 $txt['TopicSolved_menuTitle'] = 'Topic Solved';
 $txt['TopicSolved_settingsGeneral'] = 'General';
-$txt['TopicSolved_settingsCus'] = 'Customization';
 $txt['TopicSolved_menuDesc'] = 'From here you can configure the Topic Solved mod.';
 $txt['TopicSolved_enable'] = 'Enable the Topic Solved mod';
 $txt['TopicSolved_enable_sub'] = 'This is the master setting, must be enable for the mod to work properly';
 $txt['TopicSolved_boards'] = 'Put the Board IDs where the mod will work';
 $txt['TopicSolved_boards_sub'] = 'Comma separated, example: 1,2,3,4';
+$txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
+$txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
 $txt['TopicSolved_not_a_topic'] = 'The topic doesn\'t exists.';
 $txt['TopicSolved_topic_solved_no_board'] = 'Sorry, topic solved feature is not enabled in this board.';
 $txt['TopicSolved_'] = '';

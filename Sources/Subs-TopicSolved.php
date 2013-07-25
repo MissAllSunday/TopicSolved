@@ -65,7 +65,7 @@ function TopicSolved_index()
 
 	require_once($sourcedir . '/ManageSettings.php');
 	loadLanguage(TopicSolved::$name);
-	$context['page_title'] = $txt['TopicSolved_main'];
+	$context['page_title'] = $txt['TopicSolved_menuTitle'];
 
 	$subActions = array(
 		'general' => 'TopicSolved_settings',
@@ -92,25 +92,24 @@ function TopicSolved_settings(&$return_config = false)
 
 	// Extra check
 	if (empty($context['topicSolved']['object']) || !is_object($context['topicSolved']['object']))
-		$context['topicSolved']['object'] = new OAward();
+		$context['topicSolved']['object'] = new TopicSolved();
 
 	// Load stuff
 	$context['sub_template'] = 'show_settings';
-	$context['page_title'] = $txt['TopicSolved_admin_title_general'];
+	$context['page_title'] = $txt['TopicSolved_menuTitle'];
 	$context[$context['admin_menu_name']]['tab_data'] = array(
-		'title' => $txt['TopicSolved_admin_title_general'],
-		'description' => $txt['TopicSolved_admin_desc'],
+		'title' => $context['page_title'],
+		'description' => $txt['TopicSolved_menuDesc'],
 	);
 
 	require_once($sourcedir . '/ManageServer.php');
 
 	// A bunch of config settings here...
 	$config_vars = array(
-		array('desc', 'TopicSolved_admin_desc'),
-		array('check', 'TopicSolved_admin_enable', 'subtext' => $txt['TopicSolved_admin_enable_sub']),
-		array('text', 'TopicSolved_admin_1_color', 'size'=> 10, 'subtext' => $txt['TopicSolved_admin_1_color_sub']),
-		array('text', 'TopicSolved_admin_2_color', 'size'=> 10, 'subtext' => $txt['TopicSolved_admin_2_color_sub']),
-		array('text', 'TopicSolved_admin_3_color', 'size'=> 10, 'subtext' => $txt['TopicSolved_admin_3_color_sub']),
+		array('desc', 'TopicSolved_menuDesc'),
+		array('check', 'TopicSolved_enable', 'subtext' => $txt['TopicSolved_enable_sub']),
+		array('check', 'TopicSolved_boards', 'subtext' => $txt['TopicSolved_boards_sub']),
+		array('check', 'TopicSolved_lockTopic', 'subtext' => $txt['TopicSolved_admin_lockTopic_sub']),
 	);
 
 	if ($return_config)
@@ -129,7 +128,6 @@ function TopicSolved_settings(&$return_config = false)
 
 	if (isset($_GET['save']))
 	{
-
 		checkSession();
 		$save_vars = $config_vars;
 		saveDBSettings($save_vars);
