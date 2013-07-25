@@ -31,10 +31,13 @@ class TopicSolved
 	protected $topic = 0;
 	protected $topicInfo = array();
 
-	public function __construct($topic = 0)
+	public function __construct($topic = 0, $status = 0)
 	{
 		if (!empty($topic)
 			$this->topic = (int) $topic;
+
+		if (!empty($status))
+			$this->status = $status;
 	}
 
 	public static function call()
@@ -45,8 +48,13 @@ class TopicSolved
 		$temp = !empty($_GET['topic']) && is_numeric($_GET['topic']) ? (int) trim($_GET['topic']) : 0;
 		$status = !empty($_GET['status']) && is_numeric($_GET['status']) ? (int) trim($_GET['status']) : 0;
 
-		$topic = new self();
-		$topic->changeStatus($temp, $status);
+		$object = new self();
+
+		$topic = $object->getData('topic');
+		$status = $object->getData('status');
+
+		if (!empty($topic) && !empty($status))
+			$object->changeStatus($topic, $status);
 	}
 
 	protected function getTopicStatus($topic = null)
