@@ -19,4 +19,9 @@
 			<search position="replace"><![CDATA[t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll, t.id_previous_board,]]></search>
 			<add><![CDATA[t.id_topic, t.num_replies, t.locked, t.num_views, t.is_sticky, t.id_poll, t.id_previous_board, is_solved,]]></add>
 		</operation>
+		<operation>
+			<search position="replace"><![CDATA['link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>']]></search>
+			<add><![CDATA['link' => '<a href="' . $scripturl . '?topic=' . $row['id_topic'] . '.0">' . $row['first_subject'] . '</a>',
+					'is_solved' => $row['is_solved'],]]></add>
+		</operation>
 	</file>
