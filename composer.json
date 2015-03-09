@@ -1,0 +1,6 @@
+{
+	"name": "suki/topicsolved",
+	"require": {
+		"suki/ohara": "dev-master"
+	}
+}
