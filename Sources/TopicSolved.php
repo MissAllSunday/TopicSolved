@@ -25,32 +25,22 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-class TopicSolved
+class TopicSolved extends Suki\Ohara
 {
-	protected static $name = 'TopicSolved';
-	protected $topics = array();
-	protected $topicInfo = array();
-	public static $status= array('solved' => 1, 'notSolved' => 2, 'waiting' => 3)
+	public $name = __CLASS__;
 
-	public function __construct($topic = 0)
+	public function __construct()
 	{
-		if (!empty($topic)
-			$this->topic = (int) $topic;
+		global $topic;
 
-		if (!empty($status))
-			$this->status = $status;
+		$this->_topic = !empty($topic) ? $topic : 0;
+
+		$this->setRegistry();
 	}
 
 	public static function call()
 	{
 		checkSession('get');
-
-		$object = new self();
-		$topic = $object->getData('topic');
-		$status = $object->getData('status');
-
-		if (!empty($topic) && !empty($status))
-			$object->changeStatus($topic, $status);
 	}
 
 	protected function getTopicInfo($topic = null)
@@ -86,9 +76,9 @@ class TopicSolved
 
 		/* Apply permissions */
 		$this->checkPermissions();
-		
+
 		// Work with arrays
-		$topic 
+		$topic
 
 		/* Make the change */
 		$smcFunc['db_query']('', '
@@ -102,54 +92,6 @@ class TopicSolved
 				'array' => $topic,
 			)
 		);
-	}
-
-	public function sanitize($var)
-	{
-		if (empty($var))
-			return false;
-
-		$return = false;
-
-		// Is this an array?
-		if (is_array($var))
-			foreach ($var as $item)
-			{
-				if (!in_array($item, $_REQUEST))
-					continue;
-
-				if (empty($_REQUEST[$item]))
-					$return[$item] = '';
-
-				if (is_numeric($_REQUEST[$item]))
-					$return[$item] = (int) trim($_REQUEST[$item]);
-
-				elseif (is_string($_REQUEST[$item]))
-					$return[$item] = trim(htmlspecialchars($_REQUEST[$item], ENT_QUOTES));
-			}
-
-		// No? a single item then, check it boy, check it!
-		elseif (empty($_REQUEST[$var]))
-			return false;
-
-		else
-		{
-			if (is_numeric($_REQUEST[$var]))
-				$return = (int) trim($_REQUEST[$var]);
-
-			elseif (is_string($_REQUEST[$var]))
-				$return = trim(htmlspecialchars($_REQUEST[$var], ENT_QUOTES));
-		}
-
-		return $return;
-	}
-
-	public function getData($var = false)
-	{
-		if (empty($var))
-			return false;
-
-		return $this->sanitize($var);
 	}
 
 	protected function checkPermissions()

@@ -31,9 +31,6 @@ else if(!defined('SMF'))
 if ((SMF == 'SSI') && !$user_info['is_admin'])
 	die('Admin priveleges required.');
 
-/* This mod needs PHP 5.2 or greater, sorry... */
-topicsolvedCheck();
-
 /* Create the scheduled task */
 $smcFunc['db_insert'](
 	'insert',
@@ -46,9 +43,10 @@ $smcFunc['db_insert'](
 		'time_unit' => 'string',
 		'disabled' => 'int',
 		'task' => 'string',
+		'callable' => 'string',
 	),
 	array(
-		0, 0, 0, 1, 'd', 0, 'topic_solved',
+		0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
 	),
 	array(
 		'id_task',
@@ -75,9 +73,3 @@ $smcFunc['db_add_column'](
 
 if (SMF == 'SSI')
 	echo 'Database changes are complete!';
-
-	function topicsolvedCheck()
-	{
-		if (version_compare(PHP_VERSION, '5.2.0', '<'))
-			fatal_error('This mod needs PHP 5.2 or greater. You will not be able to install/use this mod, contact your host and ask for a php upgrade.');
-	}
