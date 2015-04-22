@@ -28,12 +28,17 @@ if (!defined('SMF'))
 class TopicSolved extends Suki\Ohara
 {
 	public $name = __CLASS__;
+	protected $_topic = 0;
 
 	public function __construct()
 	{
 		global $topic;
 
 		$this->_topic = !empty($topic) ? $topic : 0;
+
+		// Extra query or modify a file mmm?
+		if ($this->_topic)
+			$this->getTopicInfo();
 
 		$this->setRegistry();
 	}
@@ -48,23 +53,23 @@ class TopicSolved extends Suki\Ohara
 		global $smcFunc;
 
 		// Work with a local var
-		$localTopic = !empty($topic) ? $topic : $this->topic;
+		$topic = (array) !empty($topic) ? $topic : $this->_topic;
 
 		$request = $smcFunc['db_query']('', '
-			SELECT id_member_started, id_first_msg, id_last_msg, is_solved
+			SELECT id_topic, id_member_started, id_first_msg, id_last_msg, is_solved
 			FROM {db_prefix}topics
-			WHERE id_topic = {int:topic}
-			LIMIT {int:limit}',
+			WHERE id_topic IN({array_int:topic})',
 			array(
-				'topic' => $localTopic,
-				'limit' => 1,
+				'topic' => $topic,
 			)
 		);
 
-		$this->topicInfo[$localTopic] = $smcFunc['db_fetch_assoc']($request);
+		while ($row = $smcFunc['db_fetch_assoc']($query))
+			$this->_topicInfo[$topic['id_topic']] = $smcFunc['db_fetch_assoc']($request);
+
 		$smcFunc['db_free_result']($result);
 
-		return $this->topicInfo[$localTopic];
+		return $this->topicInfo;
 	}
 
 	public function changeStatus($topic = null, $status = null)
@@ -74,20 +79,17 @@ class TopicSolved extends Suki\Ohara
 		if (empty($status))
 			return false;
 
-		/* Apply permissions */
-		$this->checkPermissions();
+		// Work with arrays.
+		$topic = (array) !empty($topic) ? $topic : $this->_topic;
 
-		// Work with arrays
-		$topic
-
-		/* Make the change */
+		// Make the change.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET is_solved = {int:is_solved}
-			'. is_array($topic) ? 'WHERE id_topic in({array:array})' : 'WHERE id_topic = {int:topic}' .'
+			WHERE id_topic in({array_int:topic})
 			LIMIT {int:limit}',
 			array(
-				'topic' => empty($topic) ? $this->topic ? $topic,
+				'topic' => $topic,
 				'is_solved' => $status,
 				'array' => $topic,
 			)
@@ -98,24 +100,24 @@ class TopicSolved extends Suki\Ohara
 	{
 		global $user_info;
 
-		if (!allowedTo('solve_topic_any') && $user_info['id'] == $this->topicInfo['id_member_started'])
-			isAllowedTo('solve_topic_own');
+		if (!allowedTo($this->name .'_any') && $user_info['id'] == $this->topicInfo['id_member_started'])
+			isAllowedTo($this->name .'_own');
 
 		else
-			isAllowedTo('solve_topic_any');
+			isAllowedTo($this->name .'_any');
 	}
 
-	public static function permissions($permissionGroups, $permissionList)
+	public static function permissions(&$permissionGroups, &$permissionList)
 	{
-		$permissionGroups['membergroup']['simple'] = array('topicsolved_per_simple');
-		$permissionGroups['membergroup']['classic'] = array('topicsolved_per_classic');
-		$permissionList['membergroup']['solve_topic_own'] = array(
+		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
+		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
+		$permissionList['membergroup'][$this->name .'_own'] = array(
 			false,
-			'topicsolved_per_classic',
-			'topicsolved_per_simple');
-		$permissionList['membergroup']['solve_topic_any'] = array(
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
+		$permissionList['membergroup'][$this->name .'_any'] = array(
 			false,
-			'topicsolved_per_classic',
-			'topicsolved_per_simple');
+			$this->name .'_per_classic',
+			$this->name .'_per_simple');
 	}
 }
