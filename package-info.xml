@@ -3,34 +3,22 @@
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Suki:topicSolved</id>
 	<name>topicsolved</name>
-	<version>1.0 Beta 3</version>
+	<version>1.0</version>
 	<type>modification</type>
 
-	<install for="2.0 - 2.0.99">
+	<install for="2.1 Beta 1, 2.1 - 2.1.99">
 	<readme parsebbc="true">README.txt</readme>
 		<database>install.php</database>
 		<code>hooks.php</code>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
-		<require-dir name="Sources" destination="$boarddir">Source files</require-dir>
+		<require-dir name="Sources/Suki" destination="$sourcedir">Source library</require-dir>
+		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<redirect url="$scripturl?action=admin;area=modsettings;sa=general" timeout="3000"></redirect>
 	</install>
 
-	<uninstall for="2.0 - 2.0.99">
+	<uninstall for="2.1 Beta 1, 2.1 - 2.1.99">
 		<code>remove.php</code>
 		<database>install.php</database>
-		<remove-dir name="$sourcedir/Breeze" />
-		<remove-file name="$themedir/Breeze.template.php" />
-		<remove-file name="$themedir/BreezeAjax.template.php" />
-		<remove-file name="$themedir/BreezeAdmin.template.php" />
-		<remove-file name="$themedir/BreezeBuddy.template.php" />
-		<remove-file name="$themedir/css/breeze.css" />
-		<remove-file name="$themedir/js/breeze.js" />
-		<remove-file name="$themedir/js/confirm.js" />
-		<remove-file name="$themedir/js/facebox.js" />
-		<remove-file name="$themedir/js/jquery.zrssfeed.min.js" />
-		<remove-file name="$themedir/js/jquery_notification.js" />
-		<remove-file name="$themedir/js/livequery.js" />
-		<remove-file name="$languagedir/Breeze.english.php" />
 	</uninstall>
 
 </package-info>
