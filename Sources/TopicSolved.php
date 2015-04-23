@@ -40,6 +40,8 @@ class TopicSolved extends Suki\Ohara
 		if ($this->_topic)
 			$this->getTopicInfo();
 
+		loadLanguage($this->name);
+
 		$this->setRegistry();
 	}
 
@@ -107,7 +109,7 @@ class TopicSolved extends Suki\Ohara
 			isAllowedTo($this->name .'_any');
 	}
 
-	public static function permissions(&$permissionGroups, &$permissionList)
+	public function permissions(&$permissionGroups, &$permissionList)
 	{
 		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
 		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
@@ -119,5 +121,18 @@ class TopicSolved extends Suki\Ohara
 			false,
 			$this->name .'_per_classic',
 			$this->name .'_per_simple');
+	}
+
+	public function adminArea(&$areas)
+	{
+		$areas['config']['areas']['topicSolved'] = array(
+			'label' => $txt['TopicSolved_main'],
+			'file' => $this->name .'Admin.php',
+			'function' => 'TopicSolvedAdmin::call#',
+			'icon' => 'administration.gif',
+			'subsections' => array(
+				'general' => array($this->text('menuTitle')),
+			),
+		);
 	}
 }
