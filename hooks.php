@@ -33,7 +33,6 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 
 	$hooks = array(
 		'integrate_admin_areas' => '$sourcedir/TopicSolved.php|TopicSolved::adminArea',
-		'integrate_manage_logs' => '$sourcedir/TopicSolved.php|TopicSolved::logs'
 	);
 
 	foreach ($hooks as $hook => $function)

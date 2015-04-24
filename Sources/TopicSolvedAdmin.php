@@ -52,12 +52,12 @@ class TopicSolvedAdmin extends TopicSolved
 			$this->{$subActions[$this->_data['sa']]}();
 
 		else
-			redirectexit('action=admin;area=oaward');
+			redirectexit('action=admin;area='. $this->name);
 	}
 
 	function settings(&$return_config = false)
 	{
-		global $context;
+		global $context, $txt;
 
 		// Load stuff
 		$context['sub_template'] = 'show_settings';
@@ -67,14 +67,23 @@ class TopicSolvedAdmin extends TopicSolved
 			'description' => $this->text('menuDesc'),
 		);
 
-		require_once($sourcedir . '/ManageServer.php');
+		require_once($this->sourceDir . '/ManageServer.php');
 
 		// A bunch of config settings here...
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
-			array('check', $this->name .'_enable', 'subtext' => $txt['TopicSolved_enable_sub']),
-			array('text', $this->name .'_boards', 'subtext' => $txt['TopicSolved_boards_sub']),
+			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub'),
+			array('text', $this->name .'_boards', 'subtext' => $this->text('boards_sub')),
 		);
+
+		// Are there any selectable groups?
+		$groups = eiu_membergroups();
+		if (!empty($groups))
+			$config_vars[] = array('select', $this->name .'_selectGroups',
+				$groups,
+				'subtext' => $this->text('selectGroups_sub'),
+				'multiple' => true,
+			);
 
 		if ($return_config)
 			return $config_vars;
@@ -90,14 +99,33 @@ class TopicSolvedAdmin extends TopicSolved
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if (isset($_GET['save']))
+		if ($this->_data['save'])
 		{
 			checkSession();
-			$save_vars = $config_vars;
-			saveDBSettings($save_vars);
-			redirectexit('action=admin;area=topicSolved;sa=general');
+			saveDBSettings($config_vars);
+			redirectexit('action=admin;area='. $this->name .';sa=settings');
 		}
 
 		prepareDBSettingContext($config_vars);
+	}
+
+	protected function getGroups()
+	{
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, group_name
+			FROM {db_prefix}membergroups
+			WHERE id_group > {int:admin}',
+			array(
+				'admin' => 1,
+			)
+		);
+		$return = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return[$row['id_group']] = $row['group_name'];
+
+		$smcFunc['db_free_result']($request);
+		return $return;
 	}
 }

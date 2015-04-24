@@ -135,4 +135,9 @@ class TopicSolved extends Suki\Ohara
 			),
 		);
 	}
+
+	public function task()
+	{
+
+	}
 }
