@@ -31,6 +31,10 @@ else if(!defined('SMF'))
 if ((SMF == 'SSI') && !$user_info['is_admin'])
 	die('Admin privileges required.');
 
+	global $smcFunc, $context;
+
+	db_extend('packages');
+
 	if (empty($context['uninstalling']))
 	{
 		$tables[] = array(
@@ -148,8 +152,6 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 				'id_task',
 			)
 		);
-
-		db_extend('packages');
 
 		// Add the column.
 		$smcFunc['db_add_column'](

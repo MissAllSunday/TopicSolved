@@ -159,14 +159,14 @@ class TopicSolvedAdmin extends TopicSolved
 	{
 		global $smcFunc;
 
-		$result = $smcFunc['db_query']('', '
+		$request = $smcFunc['db_query']('', '
 			SELECT '. implode(', ', $this->_statusFields) .'
 			FROM {db_prefix}topic_solved', array()
 		);
 
 		$return = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$return[$row['id_status']] = $row;
+			$return[$row['status_id']] = $row;
 
 		$smcFunc['db_free_result']($request);
 		return $return;
