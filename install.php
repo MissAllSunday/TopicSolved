@@ -112,7 +112,7 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 		);
 
 		foreach ($status as $s)
-			$smcFunc['db_insert']('replace', '{db_prefix}breeze_moods', array(
+			$smcFunc['db_insert']('replace', '{db_prefix}topic_solved', array(
 					'name' => 'string',
 					'color' => 'string',
 					'css' => 'string',
