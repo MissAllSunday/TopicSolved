@@ -108,14 +108,8 @@ class TopicSolved extends Suki\Ohara
 	{
 		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
 		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
-		$permissionList['membergroup'][$this->name .'_own'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
-		$permissionList['membergroup'][$this->name .'_any'] = array(
-			false,
-			$this->name .'_per_classic',
-			$this->name .'_per_simple');
+
+		$this->quickPermissions(&$permissionList, array('own', 'any'));
 	}
 
 	public function adminArea(&$areas)

@@ -38,13 +38,18 @@ $txt['TopicSolved_selectGroups'] = 'Select the groups that will act as "staff".'
 $txt['TopicSolved_selectGroups_sub'] = 'Users within any group marked as "staff" will be used to reference when a topic can be marked as solved';
 $txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
 $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
+$txt['TopicSolved_lockTopic_op'] = 'The OP';
+$txt['TopicSolved_lockTopic_staff'] = 'Staff';
+$txt['TopicSolved_lockTopic_both'] = 'Staff or OP';
+$txt['TopicSolved_lockTopic_automatic'] = 'Automatic';
+$txt['TopicSolved_lockTopic_always'] = 'Always';
 $txt['TopicSolved_lockTopicWhen'] = 'Lock the topic when marked by:';
 $txt['TopicSolved_lockTopicWhen_sub'] = 'Chose which user can trigger locking a topic when marked as solved, options are:
-<br>- The OP. The topic will be locked only if the Original Poster marked the topic as solved
-<br>- Staff member. The topic will be locked only if someone marked as staff mark the topic as solved.
-<br>- Staff or OP. The topic will be locked if the OP or someone marked as staff marks the topic as solved.
-<br>- Automatic. The topic will be locked only when the scheduled task is executed.
-<br>- Every action. The topic will be locked whenever it gets marked as solved regardless of who marke it.';
+<br>- '. $txt['TopicSolved_lockTopic_op'] .'. The topic will be locked only if the Original Poster marked the topic as solved
+<br>- '. $txt['TopicSolved_lockTopic_staff'] .'. The topic will be locked only if someone marked as staff mark the topic as solved.
+<br>- '. $txt['TopicSolved_lockTopic_both'] .'. The topic will be locked if the OP or someone marked as staff marks the topic as solved.
+<br>- '. $txt['TopicSolved_lockTopic_automatic'] .'. The topic will be locked only when the scheduled task is executed.
+<br>- '. $txt['TopicSolved_lockTopic_always'] .'. The topic will be locked whenever it gets marked as solved regardless of who marke it.';
 $txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
 $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
 $txt['TopicSolved_not_a_topic'] = 'The topic doesn\'t exists.';

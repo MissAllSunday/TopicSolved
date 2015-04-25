@@ -98,6 +98,18 @@ class TopicSolvedAdmin extends TopicSolved
 		$config_vars[] = array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub'));
 		$config_vars[] = array('check', $this->name .'_lockTopic', 'subtext' => $this->text('lockTopic_sub'));
 
+		$config_vars[] = array('select', $this->name .'_lockTopicWhen',
+			array(
+				'op' => $txt['TopicSolved_lockTopic_op'],
+				'staff' => $txt['TopicSolved_lockTopic_staff'],
+				'both' => $txt['TopicSolved_lockTopic_both'],
+				'automatic' => $txt['TopicSolved_lockTopic_automatic'],
+				'always' => $txt['TopicSolved_lockTopic_always'],
+			),
+			'subtext' => $this->text('lockTopicWhen_sub'),
+			'multiple' => false,
+		);
+
 		// Are there any selectable groups?
 		$groups = $this->getGroups();
 
@@ -111,7 +123,7 @@ class TopicSolvedAdmin extends TopicSolved
 		if ($return_config)
 			return $config_vars;
 
-		$context['post_url'] = $this->scriptUrl . '?action=admin;area='. $this->name .';save;sa=general';
+		$context['post_url'] = $this->scriptUrl . '?action=admin;area='. $this->name .';save;sa='. $this->_sa;
 		$context['settings_title'] = $this->text('menuTitle');
 
 		if (empty($config_vars))
@@ -122,14 +134,10 @@ class TopicSolvedAdmin extends TopicSolved
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if ($this->data('save'))
+		if ($this->validate('save'))
 		{
 			// Have to directly mess with the super duper global!
-			$string = $this->data($this->name . '_boards');
-			$string = preg_replace('[\s]', '',$string);
-			$array = array_filter(explode(',',$string));
-			$string = implode(',', $array);
-			$_POST['TopicSolved_boards'] = $string;
+			$_POST['TopicSolved_boards'] = $this->commaSeparated($this->data($this->name . '_boards'));
 
 			checkSession();
 			saveDBSettings($config_vars);
