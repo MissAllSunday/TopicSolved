@@ -38,14 +38,23 @@ $txt['TopicSolved_selectGroups'] = 'Select the groups that will act as "staff".'
 $txt['TopicSolved_selectGroups_sub'] = 'Users within any group marked as "staff" will be used to reference when a topic can be marked as solved';
 $txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
 $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
+$txt['TopicSolved_lockTopicWhen'] = 'Lock the topic when marked by:';
+$txt['TopicSolved_lockTopicWhen_sub'] = 'Chose which user can trigger locking a topic when marked as solved, options are:
+<br>- The OP. The topic will be locked only if the Original Poster marked the topic as solved
+<br>- Staff member. The topic will be locked only if someone marked as staff mark the topic as solved.
+<br>- Staff or OP. The topic will be locked if the OP or someone marked as staff marks the topic as solved.
+<br>- Automatic. The topic will be locked only when the scheduled task is executed.
+<br>- Every action. The topic will be locked whenever it gets marked as solved regardless of who marke it.';
+$txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
+$txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
 $txt['TopicSolved_not_a_topic'] = 'The topic doesn\'t exists.';
 $txt['TopicSolved_topic_solved_no_board'] = 'Sorry, topic solved feature is not enabled in this board.';
 $txt['TopicSolved_staffRespond'] = 'Enable checking staff responses';
 $txt['TopicSolved_staffRespond_sub'] = 'If enable, the topics where a staff member hasn\'t answered will be marked with the status you chose';
 $txt['TopicSolved_staffRespondStatus'] = 'Chose the status to mark those topics that haven\'t been replied by a staff member';
 $txt['TopicSolved_staffRespondStatus_sub'] = 'When the scheduled task gets executed, any topic matching the criteria will be changed to this status.';
-$txt['TopicSolved_daysNotResponded'] = 'How many days need to have passed before checking for a staff response?';
-$txt['TopicSolved_daysNotResponded_sub'] = 'As in, how many days a topic needs to stay without a reply form a staff member to be marked.';
+$txt['TopicSolved_daysNotResponded'] = 'How many days need to have passed before changing a topic status?';
+$txt['TopicSolved_daysNotResponded_sub'] = 'As in, how many days a topic needs to stay without a reply form a staff member or the OP to change its status.';
 $txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';

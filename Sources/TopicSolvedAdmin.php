@@ -45,8 +45,6 @@ class TopicSolvedAdmin extends TopicSolved
 		// Redundant much!?
 		$subActions = array(
 			'settings' => 'settings',
-			'status' => 'status',
-			'add' => 'add',
 		);
 
 		loadGeneralSettingParameters($subActions, 'settings');
@@ -54,8 +52,6 @@ class TopicSolvedAdmin extends TopicSolved
 		$context[$context['admin_menu_name']]['tab_data'] = array(
 			'tabs' => array(
 				'settings' => array(),
-				'status' => array(),
-				'add' => array(),
 			),
 		);
 
@@ -84,7 +80,6 @@ class TopicSolvedAdmin extends TopicSolved
 			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
 			array('text', $this->name .'_boards', 'subtext' => $this->text('boards_sub')),
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
-			array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub')),
 		);
 
 		$status = $this->getStatus();
@@ -100,6 +95,8 @@ class TopicSolvedAdmin extends TopicSolved
 				'multiple' => true,
 			);
 
+		$config_vars[] = array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub'));
+		$config_vars[] = array('check', $this->name .'_lockTopic', 'subtext' => $this->text('lockTopic_sub'));
 
 		// Are there any selectable groups?
 		$groups = $this->getGroups();
@@ -159,6 +156,7 @@ class TopicSolvedAdmin extends TopicSolved
 			$return[$row['id_group']] = $row['group_name'];
 
 		$smcFunc['db_free_result']($request);
+
 		return $return;
 	}
 
@@ -176,6 +174,7 @@ class TopicSolvedAdmin extends TopicSolved
 			$return[$row['status_id']] = $row;
 
 		$smcFunc['db_free_result']($request);
+
 		return $return;
 	}
 }
