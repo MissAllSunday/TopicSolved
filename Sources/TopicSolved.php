@@ -45,11 +45,6 @@ class TopicSolved extends Suki\Ohara
 		$this->setRegistry();
 	}
 
-	public static function call()
-	{
-		checkSession('get');
-	}
-
 	protected function getTopicInfo($topic = null)
 	{
 		global $smcFunc;
@@ -125,8 +120,8 @@ class TopicSolved extends Suki\Ohara
 
 	public function adminArea(&$areas)
 	{
-		$areas['config']['areas']['topicSolved'] = array(
-			'label' => $txt['TopicSolved_main'],
+		$areas['config']['areas'][$this->name] = array(
+			'label' => $this->text('menuTitle'),
 			'file' => $this->name .'Admin.php',
 			'function' => 'TopicSolvedAdmin::call#',
 			'icon' => 'administration.gif',

@@ -29,7 +29,7 @@ class TopicSolvedAdmin extends TopicSolved
 {
 	public function __construct()
 	{
-
+		parent::__construct();
 	}
 
 	public function call()
@@ -40,19 +40,26 @@ class TopicSolvedAdmin extends TopicSolved
 
 		$context['page_title'] = $this->text('menuTitle');
 
+		// Redundant much!?
 		$subActions = array(
 			'settings' => 'settings',
+			'status' => 'status',
+			'add' => 'add',
 		);
 
 		loadGeneralSettingParameters($subActions, 'settings');
 
-		$this->_data = $this->data('request');
+		$context[$context['admin_menu_name']]['tab_data'] = array(
+			'tabs' => array(
+				'settings' => array(),
+				'status' => array(),
+				'add' => array(),
+			),
+		);
 
-		if ($this->_data['sa'] && in_array($this->_data['sa'], $subActions))
-			$this->{$subActions[$this->_data['sa']]}();
+		$this->_sa = isset($subActions[$this->data('sa')]) ? $subActions[$this->data('sa')] : 'settings';
 
-		else
-			redirectexit('action=admin;area='. $this->name);
+		$this->{$this->_sa}();
 	}
 
 	function settings(&$return_config = false)
@@ -72,12 +79,15 @@ class TopicSolvedAdmin extends TopicSolved
 		// A bunch of config settings here...
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
-			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub'),
+			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
 			array('text', $this->name .'_boards', 'subtext' => $this->text('boards_sub')),
+			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
+			array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub')),
 		);
 
 		// Are there any selectable groups?
-		$groups = eiu_membergroups();
+		$groups = $this->getGroups();
+
 		if (!empty($groups))
 			$config_vars[] = array('select', $this->name .'_selectGroups',
 				$groups,
@@ -99,11 +109,11 @@ class TopicSolvedAdmin extends TopicSolved
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if ($this->_data['save'])
+		if ($this->data('save'))
 		{
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area='. $this->name .';sa=settings');
+			redirectexit('action=admin;area='. $this->name .';sa='. $this->_sa);
 		}
 
 		prepareDBSettingContext($config_vars);
