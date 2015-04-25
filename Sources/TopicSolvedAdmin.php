@@ -127,6 +127,13 @@ class TopicSolvedAdmin extends TopicSolved
 
 		if ($this->data('save'))
 		{
+			// Have to directly mess with the super duper global!
+			$string = $this->data($this->name . '_boards');
+			$string = preg_replace('[\s]', '',$string);
+			$array = array_filter(explode(',',$string));
+			$string = implode(',', $array);
+			$_POST['TopicSolved_boards'] = $string;
+
 			checkSession();
 			saveDBSettings($config_vars);
 			redirectexit('action=admin;area='. $this->name .';sa='. $this->_sa);
