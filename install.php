@@ -89,45 +89,83 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 		foreach ($tables as $table)
 			$smcFunc['db_create_table']($table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
 
-	// Create the scheduled task.
-	$smcFunc['db_insert'](
-		'insert',
-		'{db_prefix}scheduled_tasks',
-		array(
-			'id_task' => 'int',
-			'next_time' => 'int',
-			'time_offset' => 'int',
-			'time_regularity' => 'int',
-			'time_unit' => 'string',
-			'disabled' => 'int',
-			'task' => 'string',
-			'callable' => 'string',
-		),
-		array(
-			0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
-		),
-		array(
-			'id_task',
-		)
-	);
+		// Add some basic topic status.
+		$status = array(
+			'solved' => array(
+				'name' => 'Solved',
+				'color' => '008000',
+				'css' => 'solved',
+				'icon' => 'fa-check-square-o',
+			),
+			'not_solved' => array(
+				'name' => 'Not Solved',
+				'color' => 'FF1919',
+				'css' => 'not_solved',
+				'icon' => 'fa-exclamation-triangle',
+			),
+			'pending' => array(
+				'name' => 'Pending',
+				'color' => 'FFCC00',
+				'css' => 'pending',
+				'icon' => 'fa-exclamation-circle',
+			),
+		);
 
-	db_extend('packages');
+		foreach ($status as $s)
+			$smcFunc['db_insert']('replace', '{db_prefix}breeze_moods', array(
+					'name' => 'string',
+					'color' => 'string',
+					'css' => 'string',
+					'icon' => 'string',
+					'enable' => 'int',
+				), array(
+					$s['name'],
+					$s['color'],
+					$s['css'],
+					$s['icon'],
+					1
+				), array('status_id',)
+			);
 
-	// Add the column.
-	$smcFunc['db_add_column'](
-		'{db_prefix}topics',
-		array(
-			'name' => 'is_solved',
-			'type' => 'int',
-			'size' => 2,
-			'null' => false,
-			'default' => 0,
-			'unsigned' => true,
-		),
-		array(),
-		'update',
-		null
-	);
+		// Create the scheduled task.
+		$smcFunc['db_insert'](
+			'insert',
+			'{db_prefix}scheduled_tasks',
+			array(
+				'id_task' => 'int',
+				'next_time' => 'int',
+				'time_offset' => 'int',
+				'time_regularity' => 'int',
+				'time_unit' => 'string',
+				'disabled' => 'int',
+				'task' => 'string',
+				'callable' => 'string',
+			),
+			array(
+				0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
+			),
+			array(
+				'id_task',
+			)
+		);
+
+		db_extend('packages');
+
+		// Add the column.
+		$smcFunc['db_add_column'](
+			'{db_prefix}topics',
+			array(
+				'name' => 'is_solved',
+				'type' => 'int',
+				'size' => 2,
+				'null' => false,
+				'default' => 0,
+				'unsigned' => true,
+			),
+			array(),
+			'update',
+			null
+		);
 	}
 
 if (SMF == 'SSI')

@@ -87,6 +87,20 @@ class TopicSolvedAdmin extends TopicSolved
 			array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub')),
 		);
 
+		$status = $this->getStatus();
+		$statusAdmin = array();
+
+		foreach ($status as $s)
+			$statusAdmin[$s['status_id']] = $s['name'];
+
+		if (!empty($statusAdmin))
+			$config_vars[] = array('select', $this->name .'_staffRespondStatus',
+				$statusAdmin,
+				'subtext' => $this->text('staffRespondStatus_sub'),
+				'multiple' => true,
+			);
+
+
 		// Are there any selectable groups?
 		$groups = $this->getGroups();
 
