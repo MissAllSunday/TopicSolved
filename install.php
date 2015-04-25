@@ -29,47 +29,106 @@ else if(!defined('SMF'))
 	die('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php and SSI.php files.');
 
 if ((SMF == 'SSI') && !$user_info['is_admin'])
-	die('Admin priveleges required.');
+	die('Admin privileges required.');
 
-/* Create the scheduled task */
-$smcFunc['db_insert'](
-	'insert',
-	'{db_prefix}scheduled_tasks',
-	array(
-		'id_task' => 'int',
-		'next_time' => 'int',
-		'time_offset' => 'int',
-		'time_regularity' => 'int',
-		'time_unit' => 'string',
-		'disabled' => 'int',
-		'task' => 'string',
-		'callable' => 'string',
-	),
-	array(
-		0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
-	),
-	array(
-		'id_task',
-	)
-);
+	if (empty($context['uninstalling']))
+	{
+		$tables[] = array(
+			'table_name' => '{db_prefix}topic_solved',
+			'columns' => array(
+				array(
+					'name' => 'status_id',
+					'type' => 'int',
+					'size' => 5,
+					'null' => false,
+					'auto' => true
+				),
+				array(
+					'name' => 'name',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'color',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'css',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'icon',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'enable',
+					'type' => 'int',
+					'size' => 1,
+					'null' => false
+				),
+			),
+			'indexes' => array(
+				array(
+					'type' => 'primary',
+					'columns' => array('status_id')
+				),
+			),
+			'if_exists' => 'ignore',
+			'error' => 'fatal',
+			'parameters' => array(),
+		);
 
-db_extend('packages');
+		// Installing
+		foreach ($tables as $table)
+			$smcFunc['db_create_table']($table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
 
-/* Add the column */
-$smcFunc['db_add_column'](
-	'{db_prefix}topics',
-	array(
-		'name' => 'is_solved',
-		'type' => 'int',
-		'size' => 2,
-		'null' => false,
-		'default' => 0,
-		'unsigned' => true,
-	),
-	array(),
-	'update',
-	null
-);
+	// Create the scheduled task.
+	$smcFunc['db_insert'](
+		'insert',
+		'{db_prefix}scheduled_tasks',
+		array(
+			'id_task' => 'int',
+			'next_time' => 'int',
+			'time_offset' => 'int',
+			'time_regularity' => 'int',
+			'time_unit' => 'string',
+			'disabled' => 'int',
+			'task' => 'string',
+			'callable' => 'string',
+		),
+		array(
+			0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
+		),
+		array(
+			'id_task',
+		)
+	);
+
+	db_extend('packages');
+
+	// Add the column.
+	$smcFunc['db_add_column'](
+		'{db_prefix}topics',
+		array(
+			'name' => 'is_solved',
+			'type' => 'int',
+			'size' => 2,
+			'null' => false,
+			'default' => 0,
+			'unsigned' => true,
+		),
+		array(),
+		'update',
+		null
+	);
+	}
 
 if (SMF == 'SSI')
 	echo 'Database changes are complete!';
