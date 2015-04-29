@@ -106,10 +106,15 @@ class TopicSolved extends Suki\Ohara
 
 	public function permissions(&$permissionGroups, &$permissionList)
 	{
+		loadLanguage($this->name);
+
 		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
 		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
 
-		$this->quickPermissions(&$permissionList, array('own', 'any'));
+		$permissionList['membergroup'][$this->name] = array(
+			true,
+			$this->name .'_per_simple',
+			$this->name .'_per_classic');
 	}
 
 	public function adminArea(&$areas)
@@ -118,7 +123,7 @@ class TopicSolved extends Suki\Ohara
 			'label' => $this->text('menuTitle'),
 			'file' => $this->name .'Admin.php',
 			'function' => 'TopicSolvedAdmin::call#',
-			'icon' => 'administration.gif',
+			'icon' => 'posts',
 			'subsections' => array(
 				'general' => array($this->text('menuTitle')),
 			),

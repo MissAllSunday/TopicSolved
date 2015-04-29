@@ -70,11 +70,11 @@ $txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';
 
 /* Permissions */
-$txt['permissiongroup_simple_topicsolved_per_simple'] = 'Breeze mod permissions';
-$txt['permissiongroup_topicsolved_per_classic'] = 'Breeze mod permissions';
-$txt['permissionname_solve_topic'] = 'Marks topics solved';
-$txt['permissionhelp_solve_topic'] = 'This permission allows a user to a topic solved.';
-$txt['permissionname_solve_topic_own'] = 'Own topic';
-$txt['permissionname_solve_topic_any'] = 'Any topic';
-$txt['permissionname_simple_solve_topic_own'] = 'Mark their own topic as solved';
-$txt['permissionname_simple_solve_topic_any'] = 'Mark anyone\'s topic as solved';
+$txt['permissiongroup_TopicSolved_per_simple'] = 'Topic solved mod permissions';
+$txt['permissiongroup_TopicSolved_per_classic'] = 'Topic Solved mod permissions';
+$txt['permissionname_TopicSolved'] = 'Marks topics solved';
+$txt['permissionhelp_TopicSolved'] = 'This permission allows a user to a topic solved.';
+$txt['permissionname_TopicSolved_own'] = 'Own topic';
+$txt['permissionname_TopicSolved_any'] = 'Any topic';
+$txt['permissionname_simple_TopicSolved_own'] = 'Mark their own topic as solved';
+$txt['permissionname_simple_TopicSolved_any'] = 'Mark anyone\'s topic as solved';
