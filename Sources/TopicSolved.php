@@ -54,11 +54,6 @@ class TopicSolved extends Suki\Ohara
 		$this->setRegistry();
 	}
 
-	public function call()
-	{
-		echo 'it works!!!';die;
-	}
-
 	protected function getTopicInfo($topic = null)
 	{
 		global $smcFunc;
