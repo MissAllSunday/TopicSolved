@@ -25,10 +25,14 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
+// Use Ohara! manually :(
+require_once ($sourcedir .'/ohara/src/Suki/Ohara.php');
+
 class TopicSolved extends Suki\Ohara
 {
 	public $name = __CLASS__;
 	protected $_topic = 0;
+	protected $_modHooks = array();
 
 	public function __construct()
 	{
@@ -42,7 +46,17 @@ class TopicSolved extends Suki\Ohara
 
 		loadLanguage($this->name);
 
+		// Define the hooks we are going to use.
+		$this->_modHooks = array(
+			'credits' => true,
+		);
+
 		$this->setRegistry();
+	}
+
+	public function call()
+	{
+		echo 'it works!!!';die;
 	}
 
 	protected function getTopicInfo($topic = null)
@@ -120,12 +134,12 @@ class TopicSolved extends Suki\Ohara
 	public function adminArea(&$areas)
 	{
 		$areas['config']['areas'][$this->name] = array(
-			'label' => $this->text('menuTitle'),
+			'label' => $this->text('modName'),
 			'file' => $this->name .'Admin.php',
 			'function' => 'TopicSolvedAdmin::call#',
 			'icon' => 'posts',
 			'subsections' => array(
-				'general' => array($this->text('menuTitle')),
+				'settings' => array($this->text('modName')),
 			),
 		);
 	}

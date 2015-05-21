@@ -40,7 +40,7 @@ class TopicSolvedAdmin extends TopicSolved
 
 		require_once($this->sourceDir . '/ManageSettings.php');
 
-		$context['page_title'] = $this->text('menuTitle');
+		$context['page_title'] = $this->text('modName');
 
 		// Redundant much!?
 		$subActions = array(
@@ -66,7 +66,7 @@ class TopicSolvedAdmin extends TopicSolved
 
 		// Load stuff
 		$context['sub_template'] = 'show_settings';
-		$context['page_title'] = $this->text('menuTitle');
+		$context['page_title'] = $this->text('modName');
 		$context[$context['admin_menu_name']]['tab_data'] = array(
 			'title' => $context['page_title'],
 			'description' => $this->text('menuDesc'),
@@ -124,7 +124,7 @@ class TopicSolvedAdmin extends TopicSolved
 			return $config_vars;
 
 		$context['post_url'] = $this->scriptUrl . '?action=admin;area='. $this->name .';save;sa='. $this->_sa;
-		$context['settings_title'] = $this->text('menuTitle');
+		$context['settings_title'] = $this->text('modName');
 
 		if (empty($config_vars))
 		{
