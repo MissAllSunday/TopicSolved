@@ -32,7 +32,12 @@ class TopicSolved extends Suki\Ohara
 {
 	public $name = __CLASS__;
 	protected $_topic = 0;
-	protected $_modHooks = array();
+
+	// Define the hooks we are going to use
+	protected $_availableHooks = array(
+		'credits' => 'integrate_credits',
+		'displayTopic' => '',
+	);
 
 	public function __construct()
 	{
@@ -45,11 +50,6 @@ class TopicSolved extends Suki\Ohara
 			$this->getTopicInfo();
 
 		loadLanguage($this->name);
-
-		// Define the hooks we are going to use.
-		$this->_modHooks = array(
-			'credits' => true,
-		);
 
 		$this->setRegistry();
 	}
