@@ -27,93 +27,29 @@ if (!defined('SMF'))
 
 // Use Ohara! manually :(
 require_once ($sourcedir .'/ohara/src/Suki/Ohara.php');
+require_once ($sourcedir .'/TopicSolvedTools.php');
 
-class TopicSolved extends Suki\Ohara
+use Suki\Ohara as Suki;
+
+class TopicSolved extends Suki
 {
 	public $name = __CLASS__;
-	protected $_topic = 0;
 
 	// Define the hooks we are going to use
 	protected $_availableHooks = array(
 		'credits' => 'integrate_credits',
-		'displayTopic' => '',
+		'displayTopic' => 'integrate_display_topic',
+		'adminArea' => 'integrate_admin_areas',
+		'permissions' => 'integrate_load_permissions',
 	);
 
 	public function __construct()
 	{
-		global $topic;
-
-		$this->_topic = !empty($topic) ? $topic : 0;
-
-		// Extra query or modify a file mmm?
-		if ($this->_topic)
-			$this->getTopicInfo();
-
-		loadLanguage($this->name);
-
+		$this->_tools = new TopicSolvedTools();
 		$this->setRegistry();
 	}
 
-	protected function getTopicInfo($topic = null)
-	{
-		global $smcFunc;
-
-		// Work with a local var
-		$topic = (array) !empty($topic) ? $topic : $this->_topic;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT id_topic, id_member_started, id_first_msg, id_last_msg, is_solved
-			FROM {db_prefix}topics
-			WHERE id_topic IN({array_int:topic})',
-			array(
-				'topic' => $topic,
-			)
-		);
-
-		while ($row = $smcFunc['db_fetch_assoc']($query))
-			$this->_topicInfo[$topic['id_topic']] = $smcFunc['db_fetch_assoc']($request);
-
-		$smcFunc['db_free_result']($result);
-
-		return $this->topicInfo;
-	}
-
-	public function changeStatus($topic = null, $status = null)
-	{
-		global $smcFunc;
-
-		if (empty($status))
-			return false;
-
-		// Work with arrays.
-		$topic = (array) !empty($topic) ? $topic : $this->_topic;
-
-		// Make the change.
-		$smcFunc['db_query']('', '
-			UPDATE {db_prefix}topics
-			SET is_solved = {int:is_solved}
-			WHERE id_topic in({array_int:topic})
-			LIMIT {int:limit}',
-			array(
-				'topic' => $topic,
-				'is_solved' => $status,
-				'array' => $topic,
-			)
-		);
-	}
-
-	protected function checkPermissions()
-	{
-		global $user_info;
-
-		if (!allowedTo($this->name .'_any') && $user_info['id'] == $this->topicInfo['id_member_started'])
-			isAllowedTo($this->name .'_own');
-
-		else
-			isAllowedTo($this->name .'_any');
-	}
-
-	public function permissions(&$permissionGroups, &$permissionList)
+	public function addPermissions(&$permissionGroups, &$permissionList)
 	{
 		loadLanguage($this->name);
 
@@ -126,7 +62,7 @@ class TopicSolved extends Suki\Ohara
 			$this->name .'_per_classic');
 	}
 
-	public function adminArea(&$areas)
+	public function addAdminArea(&$areas)
 	{
 		$areas['config']['areas'][$this->name] = array(
 			'label' => $this->text('modName'),
@@ -137,6 +73,12 @@ class TopicSolved extends Suki\Ohara
 				'settings' => array($this->text('modName')),
 			),
 		);
+	}
+
+	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
+	{
+		// If $topic_selects is empty, make sure to add a , at the beginning
+		$topic_selects[] = 't.is_solved';
 	}
 
 	public function task()

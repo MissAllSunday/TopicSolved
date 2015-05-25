@@ -73,8 +73,8 @@ $txt['TopicSolved_'] = '';
 /* Permissions */
 $txt['permissiongroup_TopicSolved_per_simple'] = 'Topic solved mod permissions';
 $txt['permissiongroup_TopicSolved_per_classic'] = 'Topic Solved mod permissions';
-$txt['permissionname_TopicSolved'] = 'Marks topics solved';
-$txt['permissionhelp_TopicSolved'] = 'This permission allows a user to a topic solved.';
+$txt['permissionname_TopicSolved'] = 'Mark topics as solved';
+$txt['permissionhelp_TopicSolved'] = 'This permission allows a user to mark a topic as solved.';
 $txt['permissionname_TopicSolved_own'] = 'Own topic';
 $txt['permissionname_TopicSolved_any'] = 'Any topic';
 $txt['permissionname_simple_TopicSolved_own'] = 'Mark their own topic as solved';
