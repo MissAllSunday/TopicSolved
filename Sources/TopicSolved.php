@@ -41,6 +41,7 @@ class TopicSolved extends Suki
 		'displayTopic' => 'integrate_display_topic',
 		'adminArea' => 'integrate_admin_areas',
 		'permissions' => 'integrate_load_permissions',
+		'helpAdmin' => 'integrate_helpadmin',
 	);
 
 	public function __construct()
