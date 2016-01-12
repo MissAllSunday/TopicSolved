@@ -6,18 +6,24 @@
 	<version>1.0</version>
 	<type>modification</type>
 
-	<install for="2.1 Beta 1, 2.1 - 2.1.99">
-	<readme parsebbc="true">README.txt</readme>
+	<install for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
+		<readme parsebbc="true">README.txt</readme>
+		<license type="inline" parsebbc="false">
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+		</license>
 		<database>install.php</database>
-		<code>hooks.php</code>
+		<hook function="TopicSolved::runTimeHooks" hook="integrate_pre_load" file="$sourcedir/TopicSolved.php" object="true"></hook>
+		<credits url="http://missallsunday.com" license="MPL 2.0" copyright="Suki" licenseurl="https://www.mozilla.org/MPL/2.0/">Topic Solved mod</credits>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
-		<require-dir name="Sources/Suki" destination="$sourcedir">Source library</require-dir>
+		<require-dir name="Sources/ohara" destination="$sourcedir">Source library</require-dir>
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<redirect url="$scripturl?action=admin;area=modsettings;sa=general" timeout="3000"></redirect>
 	</install>
 
 	<uninstall for="2.1 Beta 1, 2.1 - 2.1.99">
-		<code>remove.php</code>
+		<hook function="TopicSolved::runTimeHooks" hook="integrate_pre_load" file="$sourcedir/TopicSolved.php" object="true" reverse="true"></hook>
 		<database>install.php</database>
 	</uninstall>
 
