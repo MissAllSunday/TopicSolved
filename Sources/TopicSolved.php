@@ -36,7 +36,6 @@ class TopicSolved extends TopicSolvedTools
 
 	// Define the hooks we are going to use
 	protected $_availableHooks = array(
-		'credits' => 'integrate_credits',
 		'displayTopic' => 'integrate_display_topic',
 		'displayButtons' => 'integrate_display_buttons',
 		'messageIndex' => 'integrate_message_index',

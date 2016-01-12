@@ -27,7 +27,7 @@ if (!defined('SMF'))
 
 use Suki\Ohara as Suki;
 
-class TopicSolvedTools extends Suki
+class TopicSolvedTools extends Suki\Ohara
 {
 	// Cheating!
 	public $name = 'TopicSolved';
