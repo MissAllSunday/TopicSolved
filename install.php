@@ -35,125 +35,8 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 
 	db_extend('packages');
 
+	// Add the is_solved column.
 	if (empty($context['uninstalling']))
-	{
-		$tables[] = array(
-			'table_name' => '{db_prefix}topic_solved',
-			'columns' => array(
-				array(
-					'name' => 'status_id',
-					'type' => 'int',
-					'size' => 5,
-					'null' => false,
-					'auto' => true
-				),
-				array(
-					'name' => 'name',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'color',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'css',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'icon',
-					'type' => 'varchar',
-					'size' => 255,
-					'default' => '',
-				),
-				array(
-					'name' => 'enable',
-					'type' => 'int',
-					'size' => 1,
-					'null' => false
-				),
-			),
-			'indexes' => array(
-				array(
-					'type' => 'primary',
-					'columns' => array('status_id')
-				),
-			),
-			'if_exists' => 'ignore',
-			'error' => 'fatal',
-			'parameters' => array(),
-		);
-
-		// Installing
-		foreach ($tables as $table)
-			$smcFunc['db_create_table']($table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
-
-		// Add some basic topic status.
-		$status = array(
-			'solved' => array(
-				'name' => 'Solved',
-				'color' => '008000',
-				'css' => 'solved',
-				'icon' => 'fa-check-square-o',
-			),
-			'not_solved' => array(
-				'name' => 'Not Solved',
-				'color' => 'FF1919',
-				'css' => 'not_solved',
-				'icon' => 'fa-exclamation-triangle',
-			),
-			'pending' => array(
-				'name' => 'Pending',
-				'color' => 'FFCC00',
-				'css' => 'pending',
-				'icon' => 'fa-exclamation-circle',
-			),
-		);
-
-		foreach ($status as $s)
-			$smcFunc['db_insert']('replace', '{db_prefix}topic_solved', array(
-					'name' => 'string',
-					'color' => 'string',
-					'css' => 'string',
-					'icon' => 'string',
-					'enable' => 'int',
-				), array(
-					$s['name'],
-					$s['color'],
-					$s['css'],
-					$s['icon'],
-					1
-				), array('status_id',)
-			);
-
-		// Create the scheduled task.
-		$smcFunc['db_insert'](
-			'insert',
-			'{db_prefix}scheduled_tasks',
-			array(
-				'id_task' => 'int',
-				'next_time' => 'int',
-				'time_offset' => 'int',
-				'time_regularity' => 'int',
-				'time_unit' => 'string',
-				'disabled' => 'int',
-				'task' => 'string',
-				'callable' => 'string',
-			),
-			array(
-				0, 0, 0, 1, 'd', 0, 'topic_solved', '$sourcedir/TopicSolved.php|TopicSolved::task',
-			),
-			array(
-				'id_task',
-			)
-		);
-
-		// Add the column.
 		$smcFunc['db_add_column'](
 			'{db_prefix}topics',
 			array(
@@ -168,7 +51,6 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 			'update',
 			null
 		);
-	}
 
 if (SMF == 'SSI')
 	echo 'Database changes are complete!';

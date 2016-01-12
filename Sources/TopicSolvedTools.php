@@ -31,8 +31,13 @@ class TopicSolvedTools extends Suki
 {
 	// Cheating!
 	public $name = 'TopicSolved';
+	protected $_statusFields = array('status_id', 'name', 'color', 'css', 'icon', 'enable', 'is_solved');
+	protected $_topicStatus = array(
+		'notsolved' => 'fa-exclamation-triangle',
+		'solved' => 'fa-check-square-o',
+	);
 
-	protected function getTopicInfo($topic = false)
+	public function getTopicInfo($topic = false)
 	{
 		global $smcFunc;
 
@@ -83,7 +88,7 @@ class TopicSolvedTools extends Suki
 		);
 	}
 
-	protected function checkPermissions()
+	public function checkPermissions()
 	{
 		global $user_info;
 
@@ -92,5 +97,23 @@ class TopicSolvedTools extends Suki
 
 		else
 			isAllowedTo($this->name .'_any');
+	}
+
+	public function getStatus()
+	{
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT '. implode(', ', $this->_statusFields) .'
+			FROM {db_prefix}topic_solved', array()
+		);
+
+		$return = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return[$row['is_solved']] = $row;
+
+		$smcFunc['db_free_result']($request);
+
+		return $return;
 	}
 }

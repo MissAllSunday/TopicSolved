@@ -27,8 +27,6 @@ if (!defined('SMF'))
 
 class TopicSolvedAdmin extends TopicSolved
 {
-	protected $_statusFields = array('status_id', 'name', 'color', 'css', 'icon', 'enable',);
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -82,7 +80,7 @@ class TopicSolvedAdmin extends TopicSolved
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
 		);
 
-		$status = $this->getStatus();
+		$status = $this->_tools->getStatus();
 		$statusAdmin = array();
 
 		foreach ($status as $s)
@@ -162,24 +160,6 @@ class TopicSolvedAdmin extends TopicSolved
 		$return = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$return[$row['id_group']] = $row['group_name'];
-
-		$smcFunc['db_free_result']($request);
-
-		return $return;
-	}
-
-	protected function getStatus()
-	{
-		global $smcFunc;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT '. implode(', ', $this->_statusFields) .'
-			FROM {db_prefix}topic_solved', array()
-		);
-
-		$return = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$return[$row['status_id']] = $row;
 
 		$smcFunc['db_free_result']($request);
 

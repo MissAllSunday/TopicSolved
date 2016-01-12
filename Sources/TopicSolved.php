@@ -29,16 +29,18 @@ if (!defined('SMF'))
 require_once ($sourcedir .'/ohara/src/Suki/Ohara.php');
 require_once ($sourcedir .'/TopicSolvedTools.php');
 
-use Suki\Ohara as Suki;
-
-class TopicSolved extends Suki
+class TopicSolved extends TopicSolvedTools
 {
 	public $name = __CLASS__;
+	public $bootstrapCDN = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
 
 	// Define the hooks we are going to use
 	protected $_availableHooks = array(
 		'credits' => 'integrate_credits',
 		'displayTopic' => 'integrate_display_topic',
+		'displayButtons' => 'integrate_display_buttons',
+		'messageIndex' => 'integrate_message_index',
+		'messageButtons' => 'integrate_messageindex_buttons',
 		'adminArea' => 'integrate_admin_areas',
 		'permissions' => 'integrate_load_permissions',
 		'helpAdmin' => 'integrate_helpadmin',
@@ -46,7 +48,6 @@ class TopicSolved extends Suki
 
 	public function __construct()
 	{
-		$this->_tools = new TopicSolvedTools();
 		$this->setRegistry();
 	}
 
@@ -78,12 +79,77 @@ class TopicSolved extends Suki
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
 	{
-		// If $topic_selects is empty, make sure to add a , at the beginning
 		$topic_selects[] = 't.is_solved';
+
+		// Since we're already here...
+		loadCSSFile($this->bootstrapCDN, array('external' => true));
+		loadCSSFile('topicSolved.css');
 	}
 
-	public function task()
+	public function addMessageIndex(&$message_index_selects, &$message_index_tables, &$message_index_parameters)
 	{
+		$message_index_selects[] = 't.is_solved';
 
+		// Since we're already here...
+		loadCSSFile($this->bootstrapCDN, array('external' => true));
+		loadCSSFile('topicSolved.css');
+	}
+
+	public function addMessageButtons()
+	{
+		global $context;
+
+		if (empty($context['topics']))
+			return false;
+
+		// Append the corresponding solved class.
+		foreach ($context['topics'] as $id => $topic)
+		{
+			// Only add any css class if the topic has been marked as solved.
+			$isSolved = empty($topic['is_solved']) ? '' : 'solved';
+
+			if (!empty($isSolved) && !empty($this->_topicStatus[$isSolved]))
+				$context['topics'][$id]['css_class'] = $context['topics'][$id]['css_class'] . ' '. $isSolved;
+		}
+
+		// Create the needed JS stuff!
+		$injectJS  = '
+	$(function()
+	{';
+
+		// Because reasons!
+		foreach ($this->_topicStatus as $css => $icon)
+			$injectJS  .= '
+		$(".'. $css .'").children(".icon").empty().addClass("fa '. $icon .'");';
+
+		// Close the JS
+		$injectJS  .= '
+	});';
+
+		// Add out lovely JS!
+		addInlineJavascript($injectJS, true);
+	}
+
+	public function addDisplayButtons()
+	{
+		global $context, $user_info;
+
+		loadLanguage($this->name);
+
+		// Invert the roles!
+		$isSolved = empty($context['topicinfo']['is_solved']) ? 'solved' : 'notsolved';
+
+		$confirmText = $this->parser($this->text('mark_as_solved_sure'), array(
+			'status' => $this->text($isSolved)
+		));
+
+		if (allowedTo($this->name .'_any') || (allowedTo($this->name .'_own') && $user_info['id'] == $context['topicinfo']['id_member_started']))
+			$context['normal_buttons'][$this->name] = array(
+				'text' => $this->name .'_mark_as_'. $isSolved,
+				'lang' => true,
+				'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';'. $isSolved,
+				'class' => 'you_sure '. $isSolved,
+				'custom' => 'data-confirm="'. $confirmText .'"'
+			);
 	}
 }

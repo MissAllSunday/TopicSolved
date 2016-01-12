@@ -1,0 +1,29 @@
+.solved div.icon, .notsolved div.icon
+{
+	font-size: 250%;
+	margin : 5px 0 0 0 !important;
+}
+
+.solved div.icon
+{
+	color : #008000;
+}
+
+.notsolved div.icon
+{
+	color : #FF1919;
+}
+
+.solved, .buttonlist a.solved
+{
+	background-color: #F0F2DD !important;
+	border-color : #9ED54C !important;
+	background-image:none;
+}
+
+.notsolved, .buttonlist a.notsolved
+{
+	background-color: #FEE !important;
+	border-color : #C34 !important;
+	background-image:none;
+}
