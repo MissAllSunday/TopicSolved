@@ -27,7 +27,6 @@ if (!defined('SMF'))
 
 global $txt, $scripturl;
 
-$txt['TopicSolved_modCredits'] = '<a href="http://missallsunday.com" title="Free SMF Mods">Topic Solved mod &copy Suki</a>';
 $txt['TopicSolved_modName'] = 'Topic Solved';
 $txt['TopicSolved_settingsGeneral'] = 'General';
 $txt['TopicSolved_menuDesc'] = 'You can configure the Topic Solved mod here.';

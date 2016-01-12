@@ -2,7 +2,7 @@
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Suki:topicSolved</id>
-	<name>topicsolved</name>
+	<name>Topic Solved</name>
 	<version>1.0</version>
 	<type>modification</type>
 
@@ -19,12 +19,19 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
 		<require-dir name="Sources/ohara" destination="$sourcedir">Source library</require-dir>
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
+		<require-file name="Sources/TopicSolvedTools.php" destination="$sourcedir">Tools library</require-file>
+		<require-file name="Sources/TopicSolvedAdmin.php" destination="$sourcedir">Admin settings</require-file>
 		<redirect url="$scripturl?action=admin;area=modsettings;sa=general" timeout="3000"></redirect>
 	</install>
 
-	<uninstall for="2.1 Beta 1, 2.1 - 2.1.99">
+	<uninstall for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
 		<hook function="TopicSolved::runTimeHooks" hook="integrate_pre_load" file="$sourcedir/TopicSolved.php" object="true" reverse="true"></hook>
 		<database>install.php</database>
+		<remove-file name="$sourcedir/TopicSolved.php" />
+		<remove-file name="$sourcedir/TopicSolvedTools.php" />
+		<remove-file name="$sourcedir/TopicSolvedAdmin.php" />
+		<remove-file name="$languagedir/TopicSolved.english.php" />
+		<remove-file name="$themedir/css/TopicSolved.css" />
 	</uninstall>
 
 </package-info>

@@ -11,4 +11,3 @@ Permissions to set a topic as solved or not solved, topic owner should be able t
 Change the message background color according to the topic status.
 
 This mod is licensed under the MPL 2.0 License.
-This mod uses FamFamFam Silk icons licensed under Creative Commons Attribution 2.5 License.

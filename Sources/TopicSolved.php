@@ -125,7 +125,7 @@ class TopicSolved extends TopicSolvedTools
 		$injectJS  .= '
 	});';
 
-		// Add out lovely JS!
+		// Add our lovely JS!
 		addInlineJavascript($injectJS, true);
 	}
 
