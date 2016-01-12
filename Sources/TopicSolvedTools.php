@@ -41,10 +41,10 @@ class TopicSolvedTools extends Suki\Ohara
 	{
 		global $smcFunc;
 
-		if (empty($topic))
+		if (empty($topic) )
 			return false;
 
-		// Work with a local var
+		// Work with arrays.
 		$topic = (array) $topic;
 
 		$request = $smcFunc['db_query']('', '
@@ -52,7 +52,7 @@ class TopicSolvedTools extends Suki\Ohara
 			FROM {db_prefix}topics
 			WHERE id_topic IN({array_int:topic})',
 			array(
-				'topic' => $topic,
+				'topic' => array_unique($topic),
 			)
 		);
 
@@ -64,27 +64,22 @@ class TopicSolvedTools extends Suki\Ohara
 		return $this->topicInfo;
 	}
 
-	public function changeStatus($topic = null, $status = null)
+	public function changeStatus($data = array())
 	{
 		global $smcFunc;
 
-		if (empty($status))
+		if (empty($data))
 			return false;
 
 		// Work with arrays.
-		$topic = (array) !empty($topic) ? $topic : $this->_topic;
+		$data['topic'] = (array) $data['topic'];
 
 		// Make the change.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET is_solved = {int:is_solved}
-			WHERE id_topic in({array_int:topic})
-			LIMIT {int:limit}',
-			array(
-				'topic' => $topic,
-				'is_solved' => $status,
-				'array' => $topic,
-			)
+			WHERE id_topic IN({array_int:topic})',
+			$data
 		);
 	}
 

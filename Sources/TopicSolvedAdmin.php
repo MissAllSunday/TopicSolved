@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-class TopicSolvedAdmin extends TopicSolved
+class TopicSolvedAdmin extends TopicSolvedTools
 {
 	public function __construct()
 	{
@@ -135,7 +135,7 @@ class TopicSolvedAdmin extends TopicSolved
 		if ($this->validate('save'))
 		{
 			// Have to directly mess with the super duper global!
-			$_POST['TopicSolved_boards'] = $this->commaSeparated($this->data($this->name . '_boards'));
+			$_POST[$this->name .'_boards'] = $this->commaSeparated($this->data($this->name . '_boards'), 'numeric');
 
 			checkSession();
 			saveDBSettings($config_vars);
@@ -166,10 +166,3 @@ class TopicSolvedAdmin extends TopicSolved
 		return $return;
 	}
 }
-
-/*
-* So many fish there in the sea
-* I wanted you, you wanted me
-* That's just a phase, it's got to pass
-* I was a train moving too fast
-*/
