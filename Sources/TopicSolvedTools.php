@@ -25,8 +25,6 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-use Suki\Ohara as Suki;
-
 class TopicSolvedTools extends Suki\Ohara
 {
 	// Cheating!
@@ -96,19 +94,19 @@ class TopicSolvedTools extends Suki\Ohara
 
 	public function getStatus()
 	{
-		global $smcFunc;
+		$raw = $this->setting('status');
+		$status = array();
 
-		$request = $smcFunc['db_query']('', '
-			SELECT '. implode(', ', $this->_statusFields) .'
-			FROM {db_prefix}topic_solved', array()
-		);
+		if (empty($raw))
+			return $status;
 
-		$return = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$return[$row['is_solved']] = $row;
+		// The first item its the key!
+		foreach (explode('\n', $raw) as $r)
+		{
+			$r = explode('|', $r);
+			$status[$r[0]] = array_shift($r);
+		}
 
-		$smcFunc['db_free_result']($request);
-
-		return $return;
+		return $status;
 	}
 }

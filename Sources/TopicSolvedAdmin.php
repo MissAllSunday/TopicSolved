@@ -25,7 +25,7 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-class TopicSolvedAdmin extends TopicSolvedTools
+class TopicSolvedAdmin extends TopicSolved
 {
 	public function __construct()
 	{
@@ -76,15 +76,12 @@ class TopicSolvedAdmin extends TopicSolvedTools
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
 			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
-			array('text', $this->name .'_boards', 'subtext' => $this->text('boards_sub')),
+			array('text', $this->name .'_boards', 'size' => 30, 'subtext' => $this->text('boards_sub')),
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
 		);
 
-		$status = $this->_tools->getStatus();
+		$status = $this->getStatus();
 		$statusAdmin = array();
-
-		foreach ($status as $s)
-			$statusAdmin[$s['status_id']] = $s['name'];
 
 		if (!empty($statusAdmin))
 			$config_vars[] = array('select', $this->name .'_staffRespondStatus',
@@ -101,12 +98,12 @@ class TopicSolvedAdmin extends TopicSolvedTools
 				'op' => $txt['TopicSolved_lockTopic_op'],
 				'staff' => $txt['TopicSolved_lockTopic_staff'],
 				'both' => $txt['TopicSolved_lockTopic_both'],
-				'automatic' => $txt['TopicSolved_lockTopic_automatic'],
-				'always' => $txt['TopicSolved_lockTopic_always'],
 			),
 			'subtext' => $this->text('lockTopicWhen_sub'),
 			'multiple' => false,
 		);
+
+		$config_vars[] = array('large_text', $this->name .'_classes', '6" style="width:95%');
 
 		// Are there any selectable groups?
 		$groups = $this->getGroups();
