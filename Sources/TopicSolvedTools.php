@@ -30,10 +30,6 @@ class TopicSolvedTools extends Suki\Ohara
 	// Cheating!
 	public $name = 'TopicSolved';
 	protected $_statusFields = array('status_id', 'name', 'color', 'css', 'icon', 'enable', 'is_solved');
-	protected $_topicStatus = array(
-		'notsolved' => 'fa-exclamation-triangle',
-		'solved' => 'fa-check-square-o',
-	);
 
 	public function getTopicInfo($topic = false)
 	{

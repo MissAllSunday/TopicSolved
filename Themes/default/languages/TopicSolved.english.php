@@ -41,15 +41,13 @@ $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the t
 $txt['TopicSolved_lockTopic_op'] = 'The OP';
 $txt['TopicSolved_lockTopic_staff'] = 'Staff';
 $txt['TopicSolved_lockTopic_both'] = 'Staff or OP';
-$txt['TopicSolved_lockTopic_automatic'] = 'Automatic';
-$txt['TopicSolved_lockTopic_always'] = 'Always';
 $txt['TopicSolved_lockTopicWhen'] = 'Lock the topic when marked by:';
 $txt['TopicSolved_lockTopicWhen_sub'] = 'Chose which user can trigger locking a topic when marked as solved, options are:
 <br>- '. $txt['TopicSolved_lockTopic_op'] .'. The topic will be locked only if the Original Poster marked the topic as solved
 <br>- '. $txt['TopicSolved_lockTopic_staff'] .'. The topic will be locked only if someone marked as staff mark the topic as solved.
-<br>- '. $txt['TopicSolved_lockTopic_both'] .'. The topic will be locked if the OP or someone marked as staff marks the topic as solved.
-<br>- '. $txt['TopicSolved_lockTopic_automatic'] .'. The topic will be locked only when the scheduled task is executed.
-<br>- '. $txt['TopicSolved_lockTopic_always'] .'. The topic will be locked whenever it gets marked as solved regardless of who marke it.';
+<br>- '. $txt['TopicSolved_lockTopic_both'] .'. The topic will be locked if the OP or someone marked as staff marks the topic as solved.';
+$txt['TopicSolved_classes'] = 'The classes used by this mod';
+$txt['TopicSolved_classes_sub'] = 'By default the mod uses two types: solved and not solved'; 
 $txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
 $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
 $txt['TopicSolved_not_a_topic'] = 'The topic doesn\'t exists.';
@@ -59,7 +57,7 @@ $txt['TopicSolved_staffRespond_sub'] = 'If enable, the topics where a staff memb
 $txt['TopicSolved_staffRespondStatus'] = 'Chose the status to mark those topics that haven\'t been replied by a staff member';
 $txt['TopicSolved_staffRespondStatus_sub'] = 'When the scheduled task gets executed, any topic matching the criteria will be changed to this status.';
 $txt['TopicSolved_daysNotResponded'] = 'How many days need to have passed before changing a topic status?';
-$txt['TopicSolved_daysNotResponded_sub'] = 'As in, how many days a topic needs to stay without a reply form a staff member or the OP to change its status.';
+$txt['TopicSolved_daysNotResponded_sub'] = 'As in, how many days a topic needs to stay without a reply from a staff member or the OP to change its status.';
 $txt['TopicSolved_mark_as_solved'] = 'Mark as solved';
 $txt['TopicSolved_mark_as_notsolved'] = 'Mark as not solved';
 $txt['TopicSolved_mark_as_solved_sure'] = 'Are you sure you want to mark this topic as {status}?';

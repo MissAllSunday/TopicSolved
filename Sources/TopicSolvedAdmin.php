@@ -72,6 +72,11 @@ class TopicSolvedAdmin extends TopicSolved
 
 		require_once($this->sourceDir . '/ManageServer.php');
 
+		// Set some default solved "classes". Do note the weird new line!
+		if (!$this->enable('classes'))
+			updateSettings(array($this->name .'_classes' => 'notsolved|fa fa-exclamation-triangle
+solved|fa fa-check-square-o'));
+
 		// A bunch of config settings here...
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
@@ -103,7 +108,7 @@ class TopicSolvedAdmin extends TopicSolved
 			'multiple' => false,
 		);
 
-		$config_vars[] = array('large_text', $this->name .'_classes', '6" style="width:95%');
+		$config_vars[] = array('large_text', $this->name .'_classes', '3" style="width:95%', 'subtext' => $this->text('classes_sub'));
 
 		// Are there any selectable groups?
 		$groups = $this->getGroups();

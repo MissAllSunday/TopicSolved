@@ -82,7 +82,7 @@ class TopicSolved extends TopicSolvedTools
 
 		// Since we're already here...
 		loadCSSFile($this->bootstrapCDN, array('external' => true));
-		loadCSSFile('topicSolved.css');
+		loadCSSFile('TopicSolved.css');
 	}
 
 	public function addMessageIndex(&$message_index_selects, &$message_index_tables, &$message_index_parameters)
@@ -91,7 +91,7 @@ class TopicSolved extends TopicSolvedTools
 
 		// Since we're already here...
 		loadCSSFile($this->bootstrapCDN, array('external' => true));
-		loadCSSFile('topicSolved.css');
+		loadCSSFile('TopicSolved.css');
 	}
 
 	public function addMessageButtons()
