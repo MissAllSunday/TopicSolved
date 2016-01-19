@@ -29,7 +29,14 @@ class TopicSolvedTools extends Suki\Ohara
 {
 	// Cheating!
 	public $name = 'TopicSolved';
-	protected $_statusFields = array('status_id', 'name', 'color', 'css', 'icon', 'enable', 'is_solved');
+
+/* 	Basic 3 stages:
+	0 means normal topics IE empty class
+	1 means solved topics
+	2 means topics not solved */
+	protected $_statusFields = array('', 'notsolved', 'solved');
+
+	protected $_dbField = 't.is_solved';
 
 	public function getTopicInfo($topic = false)
 	{
@@ -97,7 +104,7 @@ class TopicSolvedTools extends Suki\Ohara
 			return $status;
 
 		// The first item its the key!
-		foreach (explode('\n', $raw) as $r)
+		foreach (explode(PHP_EOL, $raw) as $r)
 		{
 			$r = explode('|', $r);
 			$status[$r[0]] = array_shift($r);

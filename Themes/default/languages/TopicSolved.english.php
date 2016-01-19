@@ -46,14 +46,14 @@ $txt['TopicSolved_lockTopicWhen_sub'] = 'Chose which user can trigger locking a 
 <br>- '. $txt['TopicSolved_lockTopic_op'] .'. The topic will be locked only if the Original Poster marked the topic as solved
 <br>- '. $txt['TopicSolved_lockTopic_staff'] .'. The topic will be locked only if someone marked as staff mark the topic as solved.
 <br>- '. $txt['TopicSolved_lockTopic_both'] .'. The topic will be locked if the OP or someone marked as staff marks the topic as solved.';
-$txt['TopicSolved_classes'] = 'The classes used by this mod';
-$txt['TopicSolved_classes_sub'] = 'By default the mod uses two types: solved and not solved'; 
+$txt['TopicSolved_status'] = 'The status used by this mod';
+$txt['TopicSolved_status_sub'] = 'By default the mod uses two types: solved and not solved.<br> You can change the font awesome icon if you want.'; 
 $txt['TopicSolved_lockTopic'] = 'Lock the topic when marked as solved';
 $txt['TopicSolved_lockTopic_sub'] = 'Whenever a topic is marked as solved, the topic will also be locked.';
 $txt['TopicSolved_not_a_topic'] = 'The topic doesn\'t exists.';
 $txt['TopicSolved_topic_solved_no_board'] = 'Sorry, topic solved feature is not enabled in this board.';
 $txt['TopicSolved_staffRespond'] = 'Enable checking staff responses';
-$txt['TopicSolved_staffRespond_sub'] = 'If enable, the topics where a staff member hasn\'t answered will be marked with the status you chose';
+$txt['TopicSolved_staffRespond_sub'] = 'If enable, the topics where a staff member hasn\'t answered will be marked as not solved and if a staff member has replied but the OP hasn\'t, it will be marked as solved.';
 $txt['TopicSolved_staffRespondStatus'] = 'Chose the status to mark those topics that haven\'t been replied by a staff member';
 $txt['TopicSolved_staffRespondStatus_sub'] = 'When the scheduled task gets executed, any topic matching the criteria will be changed to this status.';
 $txt['TopicSolved_daysNotResponded'] = 'How many days need to have passed before changing a topic status?';
