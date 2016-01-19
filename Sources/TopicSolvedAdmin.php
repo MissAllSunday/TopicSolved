@@ -32,6 +32,32 @@ class TopicSolvedAdmin extends TopicSolved
 		parent::__construct();
 	}
 
+	public function addPermissions(&$permissionGroups, &$permissionList)
+	{
+		loadLanguage($this->name);
+
+		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
+		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
+
+		$permissionList['membergroup'][$this->name] = array(
+			true,
+			$this->name .'_per_simple',
+			$this->name .'_per_classic');
+	}
+
+	public function addAdminArea(&$areas)
+	{
+		$areas['config']['areas'][$this->name] = array(
+			'label' => $this->text('modName'),
+			'file' => $this->name .'Admin.php',
+			'function' => $this->name .'Admin::call#',
+			'icon' => 'posts',
+			'subsections' => array(
+				'settings' => array($this->text('modName')),
+			),
+		);
+	}
+
 	public function call()
 	{
 		global $context;

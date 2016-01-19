@@ -46,35 +46,19 @@ class TopicSolved extends TopicSolvedTools
 		'helpAdmin' => 'integrate_helpadmin',
 	);
 
+	// Tell SMF where to find the permissions and admin settings.
+	protected $_overwriteHooks = array(
+		'permissions' => array(
+			'file' => '$sourcedir/'. $this->name .'Admin.php',
+		),
+		'adminArea' => array(
+			'file' => '$sourcedir/'. $this->name .'Admin.php',
+		),
+	);
+
 	public function __construct()
 	{
 		$this->setRegistry();
-	}
-
-	public function addPermissions(&$permissionGroups, &$permissionList)
-	{
-		loadLanguage($this->name);
-
-		$permissionGroups['membergroup']['simple'] = array($this->name .'_per_simple');
-		$permissionGroups['membergroup']['classic'] = array($this->name .'_per_classic');
-
-		$permissionList['membergroup'][$this->name] = array(
-			true,
-			$this->name .'_per_simple',
-			$this->name .'_per_classic');
-	}
-
-	public function addAdminArea(&$areas)
-	{
-		$areas['config']['areas'][$this->name] = array(
-			'label' => $this->text('modName'),
-			'file' => $this->name .'Admin.php',
-			'function' => 'TopicSolvedAdmin::call#',
-			'icon' => 'posts',
-			'subsections' => array(
-				'settings' => array($this->text('modName')),
-			),
-		);
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
