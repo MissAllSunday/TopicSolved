@@ -65,7 +65,7 @@ class TopicSolved extends TopicSolvedTools
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
 	{
 		// Mod's gotta be enable.
-		if (!$this->enable('enable'));
+		if (!$this->enable('master'))
 			return;
 
 		$topic_selects[] = $this->_dbField;
@@ -78,7 +78,7 @@ class TopicSolved extends TopicSolvedTools
 	public function addMessageIndex(&$message_index_selects, &$message_index_tables, &$message_index_parameters)
 	{
 		// Mod's gotta be enable.
-		if (!$this->enable('enable'));
+		if (!$this->enable('master'))
 			return;
 
 		$message_index_selects[] = $this->_dbField;
@@ -92,8 +92,8 @@ class TopicSolved extends TopicSolvedTools
 	{
 		global $context;
 
-		// no topics or the mod isn't enable?
-		if (empty($context['topics']) || !$this->enable('enable'))
+		// No topics or the mod isn't enable?
+		if (empty($context['topics']) || !$this->enable('master'))
 			return false;
 
 		// Append the corresponding solved class.
@@ -129,7 +129,7 @@ class TopicSolved extends TopicSolvedTools
 		global $context, $user_info;
 
 		// Mod's gotta be enable.
-		if (!$this->enable('enable'));
+		if (!$this->enable('master'))
 			return;
 
 		loadLanguage($this->name);

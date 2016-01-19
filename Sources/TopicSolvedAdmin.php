@@ -105,7 +105,7 @@ class TopicSolvedAdmin extends TopicSolvedTools
 		// A bunch of config settings here...
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
-			array('check', $this->name .'_enable', 'subtext' => $this->text('enable_sub')),
+			array('check', $this->name .'_master', 'subtext' => $this->text('master_sub')),
 			array('text', $this->name .'_boards', 'size' => 30, 'subtext' => $this->text('boards_sub')),
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
 		);
