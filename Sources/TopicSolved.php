@@ -41,19 +41,7 @@ class TopicSolved extends TopicSolvedTools
 		'displayButtons' => 'integrate_display_buttons',
 		'messageIndex' => 'integrate_message_index',
 		'messageButtons' => 'integrate_messageindex_buttons',
-		'adminArea' => 'integrate_admin_areas',
-		'permissions' => 'integrate_load_permissions',
 		'helpAdmin' => 'integrate_helpadmin',
-	);
-
-	// Tell SMF where to find the permissions and admin settings.
-	protected $_overwriteHooks = array(
-		'permissions' => array(
-			'file' => '$sourcedir/'. $this->name .'Admin.php',
-		),
-		'adminArea' => array(
-			'file' => '$sourcedir/'. $this->name .'Admin.php',
-		),
 	);
 
 	public function __construct()
