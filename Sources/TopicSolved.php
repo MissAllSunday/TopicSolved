@@ -78,7 +78,7 @@ class TopicSolved extends TopicSolvedTools
 	public function addMessageIndex(&$message_index_selects, &$message_index_tables, &$message_index_parameters)
 	{
 		// Mod's gotta be enable.
-		if (!$this->enable('master'))
+		if (!$this->innerCheck())
 			return;
 
 		$message_index_selects[] = $this->_dbField;
@@ -93,7 +93,7 @@ class TopicSolved extends TopicSolvedTools
 		global $context;
 
 		// No topics or the mod isn't enable?
-		if (empty($context['topics']) || !$this->enable('master'))
+		if (empty($context['topics']) || !$this->innerCheck())
 			return false;
 
 		// Append the corresponding solved class.
@@ -129,7 +129,7 @@ class TopicSolved extends TopicSolvedTools
 		global $context, $user_info;
 
 		// Mod's gotta be enable.
-		if (!$this->enable('master'))
+		if (!$this->innerCheck())
 			return;
 
 		loadLanguage($this->name);
@@ -151,6 +151,25 @@ class TopicSolved extends TopicSolvedTools
 				'class' => 'you_sure '. $this->_statusFields[$inverted],
 				'custom' => 'data-confirm="'. $confirmText .'"'
 			);
+	}
+
+	/* Checks if the mod is enable and if the current board is a selected one. */
+	public function innerCheck()
+	{
+		global $board, $context;
+
+		// Perhaps someone else wants to disable this mod for whatever reason!
+		if (!empty($context['force_disable_'. $this->name]))
+			return false;
+
+		// Mod's gotta be enable and a board needs to be selected.
+		if (!$this->enable('master') || !$this->enable('boards') || empty($board))
+			return false;
+
+		// A board needs to be selected.
+		$tBoards = explode(',', $this->setting('boards'));
+
+		return in_array($board, $tBoards);
 	}
 }
 
