@@ -89,15 +89,34 @@ class TopicSolvedTools extends Suki\Ohara
 		);
 	}
 
-	public function checkPermissions()
+	public function checkPermissions($topicOwner = 0)
 	{
 		global $user_info;
 
-		if (!allowedTo($this->name .'_any') && $user_info['id'] == $this->topicInfo['id_member_started'])
-			isAllowedTo($this->name .'_own');
+		if (!allowedTo($this->name .'_any') && $user_info['id'] == $topicOwner)
+			return allowedTo($this->name .'_own');
 
 		else
-			isAllowedTo($this->name .'_any');
+			return allowedTo($this->name .'_any');
+	}
+
+	/* Checks if the mod is enable and if the current board is a selected one. */
+	public function innerCheck()
+	{
+		global $board, $context;
+
+		// Perhaps someone else wants to disable this mod for whatever reason!
+		if (!empty($context['force_disable_'. $this->name]))
+			return false;
+
+		// Mod's gotta be enable and a board needs to be selected.
+		if (!$this->enable('master') || !$this->enable('boards') || empty($board))
+			return false;
+
+		// A board needs to be selected.
+		$tBoards = explode(',', $this->setting('boards'));
+
+		return in_array($board, $tBoards);
 	}
 
 	public function getStatus()
