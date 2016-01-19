@@ -38,6 +38,11 @@ class TopicSolvedTools extends Suki\Ohara
 
 	protected $_dbField = 't.is_solved';
 
+	public function __construct()
+	{
+		$this->setRegistry();
+	}
+
 	public function getTopicInfo($topic = false)
 	{
 		global $smcFunc;

@@ -42,11 +42,24 @@ class TopicSolved extends TopicSolvedTools
 		'messageIndex' => 'integrate_message_index',
 		'messageButtons' => 'integrate_messageindex_buttons',
 		'helpAdmin' => 'integrate_helpadmin',
+		'adminArea' => 'integrate_admin_areas',
+		'permissions' => 'integrate_load_permissions',
+	);
+
+	protected $_overwriteHooks = array(
+		'adminArea' => array(
+			'func' => 'TopicSolvedAdmin::addAdminArea',
+			'file' => 'TopicSolvedAdmin.php',
+		),
+		'permissions' => array(
+			'func' => 'TopicSolvedAdmin::addPermissions',
+			'file' => 'TopicSolvedAdmin.php',
+		),
 	);
 
 	public function __construct()
 	{
-		$this->setRegistry();
+		parent::__construct();
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)

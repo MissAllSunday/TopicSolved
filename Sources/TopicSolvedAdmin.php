@@ -25,14 +25,8 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-class TopicSolvedAdmin extends TopicSolved
+class TopicSolvedAdmin extends TopicSolvedTools
 {
-	// Define the hooks we are going to use
-	protected $_availableHooks = array(
-		'adminArea' => 'integrate_admin_areas',
-		'permissions' => 'integrate_load_permissions',
-	);
-
 	public function __construct()
 	{
 		parent::__construct();
