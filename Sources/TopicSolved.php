@@ -46,6 +46,7 @@ class TopicSolved extends TopicSolvedTools
 		'permissions' => 'integrate_load_permissions',
 	);
 
+	// Tell SMF where the settings are!
 	protected $_overwriteHooks = array(
 		'adminArea' => array(
 			'func' => 'TopicSolvedAdmin::addAdminArea',
@@ -60,6 +61,22 @@ class TopicSolved extends TopicSolvedTools
 	public function __construct()
 	{
 		parent::__construct();
+	}
+
+	public function call()
+	{
+		// Get the solved ID.
+		$isSolved = $this->data('isSolved');
+		$topicS = $this->data('topic');
+
+		// Meh...
+		if (empty($isSolved) || empty($topicS))
+			return redirectexit();
+
+		$this->changeStatus(array(
+			'isSolved' => $isSolved,
+			'topic' => $topicS
+		));
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
@@ -100,10 +117,10 @@ class TopicSolved extends TopicSolvedTools
 		foreach ($context['topics'] as $id => $topic)
 		{
 			// Only add any css class if the topic has been marked.
-			if (empty($topic['is_solved']))
+			if (empty($topic['isSolved']))
 				continue;
 
-			$context['topics'][$id]['css_class'] = $context['topics'][$id]['css_class'] . ' '. $this->_statusFields[$topic['is_solved']];
+			$context['topics'][$id]['css_class'] = $context['topics'][$id]['css_class'] . ' '. $this->_statusFields[$topic['isSolved']];
 		}
 
 		// Create the needed JS stuff!
@@ -134,23 +151,22 @@ class TopicSolved extends TopicSolvedTools
 
 		loadLanguage($this->name);
 
-		$context['topicinfo']['is_solved'] = (int) $context['topicinfo']['is_solved'];
+		$context['topicinfo']['isSolved'] = (int) $context['topicinfo']['isSolved'];
 
 		// Invert the roles!
-		$inverted = ($context['topicinfo']['is_solved'] != 2) ? 2 : 1;
+		$inverted = ($context['topicinfo']['isSolved'] != 2) ? 2 : 1;
 
 		$confirmText = $this->parser($this->text('mark_as_solved_sure'), array(
 			'status' => $this->text($this->_statusFields[$inverted])
 		));
 
-		if (allowedTo($this->name .'_any') || (allowedTo($this->name .'_own') && $user_info['id'] == $context['topicinfo']['id_member_started']))
-			$context['normal_buttons'][$this->name] = array(
-				'text' => $this->name .'_mark_as_'. $this->_statusFields[$inverted],
-				'lang' => true,
-				'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';is_solved='. $inverted,
-				'class' => 'you_sure '. $this->_statusFields[$inverted],
-				'custom' => 'data-confirm="'. $confirmText .'"'
-			);
+		$context['normal_buttons'][$this->name] = array(
+			'text' => $this->name .'_mark_as_'. $this->_statusFields[$inverted],
+			'lang' => true,
+			'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';isSolved='. $inverted,
+			'class' => 'you_sure '. $this->_statusFields[$inverted],
+			'custom' => 'data-confirm="'. $confirmText .'"'
+		);
 	}
 }
 
