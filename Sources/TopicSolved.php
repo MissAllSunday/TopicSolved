@@ -66,17 +66,33 @@ class TopicSolved extends TopicSolvedTools
 	public function call()
 	{
 		// Get the solved ID.
-		$isSolved = $this->data('isSolved');
+		$is_solved = $this->data('is_solved');
 		$topicS = $this->data('topic');
 
 		// Meh...
-		if (empty($isSolved) || empty($topicS))
+		if (empty($is_solved) || empty($topicS))
 			return redirectexit();
 
+		// Change it!
 		$this->changeStatus(array(
-			'isSolved' => $isSolved,
+			'is_solved' => $is_solved,
 			'topic' => $topicS
 		));
+
+		// Log the change.
+
+		// Go back.
+		return redirectexit('topic='. $topicS);
+	}
+
+	public function addLog(&$log_functions)
+	{
+		global $context;
+
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicSolved'] = array(
+			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=errorlog;desc',
+			'description' => sprintf($txt['errlog_desc'], $txt['remove']),
+		);
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
@@ -117,10 +133,10 @@ class TopicSolved extends TopicSolvedTools
 		foreach ($context['topics'] as $id => $topic)
 		{
 			// Only add any css class if the topic has been marked.
-			if (empty($topic['isSolved']))
+			if (empty($topic['is_solved']))
 				continue;
 
-			$context['topics'][$id]['css_class'] = $context['topics'][$id]['css_class'] . ' '. $this->_statusFields[$topic['isSolved']];
+			$context['topics'][$id]['css_class'] = $context['topics'][$id]['css_class'] . ' '. $this->_statusFields[$topic['is_solved']];
 		}
 
 		// Create the needed JS stuff!
@@ -131,7 +147,7 @@ class TopicSolved extends TopicSolvedTools
 		// Because reasons!
 		foreach ($this->getStatus() as $class => $icon)
 			$injectJS  .= '
-		$(".'. $class .'").children(".icon").empty().addClass("'. $icon .'");';
+		$(".'. $class .'").children(".board_icon").empty().addClass("'. $icon .'");';
 
 		// Close the JS
 		$injectJS  .= '
@@ -151,10 +167,10 @@ class TopicSolved extends TopicSolvedTools
 
 		loadLanguage($this->name);
 
-		$context['topicinfo']['isSolved'] = (int) $context['topicinfo']['isSolved'];
+		$context['topicinfo']['is_solved'] = (int) $context['topicinfo']['is_solved'];
 
 		// Invert the roles!
-		$inverted = ($context['topicinfo']['isSolved'] != 2) ? 2 : 1;
+		$inverted = ($context['topicinfo']['is_solved'] != 2) ? 2 : 1;
 
 		$confirmText = $this->parser($this->text('mark_as_solved_sure'), array(
 			'status' => $this->text($this->_statusFields[$inverted])
@@ -163,7 +179,7 @@ class TopicSolved extends TopicSolvedTools
 		$context['normal_buttons'][$this->name] = array(
 			'text' => $this->name .'_mark_as_'. $this->_statusFields[$inverted],
 			'lang' => true,
-			'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';isSolved='. $inverted,
+			'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';is_solved='. $inverted,
 			'class' => 'you_sure '. $this->_statusFields[$inverted],
 			'custom' => 'data-confirm="'. $confirmText .'"'
 		);

@@ -83,7 +83,7 @@ class TopicSolvedTools extends Suki\Ohara
 		// Make the change.
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
-			SET is_solved = {int:isSolved}
+			SET is_solved = {int:is_solved}
 			WHERE id_topic IN({array_int:topic})',
 			$data
 		);
@@ -131,7 +131,7 @@ class TopicSolvedTools extends Suki\Ohara
 		foreach (explode(PHP_EOL, $raw) as $r)
 		{
 			$r = explode('|', $r);
-			$status[$r[0]] = array_shift($r);
+			$status[$r[0]] = $r[1];
 		}
 
 		return $status;

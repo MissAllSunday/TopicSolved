@@ -1,15 +1,15 @@
-.solved div.icon, .notsolved div.icon
+.solved div.board_icon, .notsolved div.board_icon
 {
 	font-size: 250%;
-	margin : 5px 0 0 0 !important;
+	display: table-cell;
 }
 
-.solved div.icon
+.solved div.board_icon
 {
 	color : #008000;
 }
 
-.notsolved div.icon
+.notsolved div.board_icon
 {
 	color : #FF1919;
 }
