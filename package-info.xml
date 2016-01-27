@@ -22,7 +22,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<require-file name="Sources/TopicSolvedTools.php" destination="$sourcedir">Tools library</require-file>
 		<require-file name="Sources/TopicSolvedAdmin.php" destination="$sourcedir">Admin settings</require-file>
-		<redirect url="$scripturl?action=admin;area=modsettings;sa=general" timeout="3000"></redirect>
+		<redirect url="$scripturl?action=admin;area=TopicSolved" timeout="3000"></redirect>
 	</install>
 
 	<uninstall for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
