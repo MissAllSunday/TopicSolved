@@ -44,6 +44,7 @@ class TopicSolved extends TopicSolvedTools
 		'helpAdmin' => 'integrate_helpadmin',
 		'adminArea' => 'integrate_admin_areas',
 		'permissions' => 'integrate_load_permissions',
+		'log' => 'integrate_manage_logs',
 	);
 
 	// Tell SMF where the settings are!
@@ -89,10 +90,14 @@ class TopicSolved extends TopicSolvedTools
 	{
 		global $context;
 
+		// Menu stuff.
 		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicSolved'] = array(
-			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=errorlog;desc',
-			'description' => sprintf($txt['errlog_desc'], $txt['remove']),
+			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog;desc',
+			'description' => $this->text('log'),
 		);
+
+		// Add our method.
+		$log_functions['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#');
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)

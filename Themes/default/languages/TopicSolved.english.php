@@ -63,7 +63,7 @@ $txt['TopicSolved_mark_as_notsolved'] = 'Mark as not solved';
 $txt['TopicSolved_mark_as_solved_sure'] = 'Are you sure you want to mark this topic as {status}?';
 $txt['TopicSolved_solved'] = 'solved';
 $txt['TopicSolved_notsolved'] = 'not solved';
-$txt['TopicSolved_'] = '';
+$txt['TopicSolved_log'] = 'Topic Solved log';
 $txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';
 
