@@ -91,9 +91,10 @@ class TopicSolved extends TopicSolvedTools
 		global $context;
 
 		// Menu stuff.
-		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicSolved'] = array(
+		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicsolvedlog'] = array(
 			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog;desc',
-			'description' => $this->text('log'),
+			'label' => $this->text('log'),
+			'description' => '',
 		);
 
 		// Add our method.
