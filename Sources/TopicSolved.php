@@ -34,31 +34,6 @@ class TopicSolved extends TopicSolvedTools
 	public $name = __CLASS__;
 	public $bootstrapCDN = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
 
-	// Define the hooks we are going to use
-	protected $_availableHooks = array(
-		'actions' => 'integrate_actions',
-		'displayTopic' => 'integrate_display_topic',
-		'displayButtons' => 'integrate_display_buttons',
-		'messageIndex' => 'integrate_message_index',
-		'messageButtons' => 'integrate_messageindex_buttons',
-		'helpAdmin' => 'integrate_helpadmin',
-		'adminArea' => 'integrate_admin_areas',
-		'permissions' => 'integrate_load_permissions',
-		'log' => 'integrate_manage_logs',
-	);
-
-	// Tell SMF where the settings are!
-	protected $_overwriteHooks = array(
-		'adminArea' => array(
-			'func' => 'TopicSolvedAdmin::addAdminArea',
-			'file' => 'TopicSolvedAdmin.php',
-		),
-		'permissions' => array(
-			'func' => 'TopicSolvedAdmin::addPermissions',
-			'file' => 'TopicSolvedAdmin.php',
-		),
-	);
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -94,11 +69,152 @@ class TopicSolved extends TopicSolvedTools
 		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicsolvedlog'] = array(
 			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog;desc',
 			'label' => $this->text('log'),
-			'description' => '',
+			'description' => $this->text('log_desc'),
 		);
 
 		// Add our method.
-		$log_functions['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#');
+		$log_functions['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#', 'disabled' => $this->enable('master'));
+	}
+
+	public function displayLog()
+	{
+		global $context, $smcFunc;
+
+		loadtemplate($this->name);
+		loadLanguage($this->name);
+
+		$_subActions = array('delete');
+
+		require_once($this->sourceDir . '/Subs-List.php');
+
+		// Quick fix for lower php versions.
+		$that = $this;
+
+		// Get the log count.
+		$totalLogs = $this->getTopicLogCount();
+
+		// Do the topic notifications.
+		$listOptions = array(
+			'id' => 'topic_solved_log',
+			'width' => '100%',
+			'items_per_page' => 15,
+			'no_items_label' => $this->text('log_none'),
+			'no_items_align' => 'left',
+			'base_href' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog',
+			'default_sort_col' => 'desc',
+			'get_items' => array(
+				'function' => 'TopicSolvedTools::getLog#',
+				'params' => array(),
+			),
+			'get_count' => array(
+				'function' => function () use ($totalLogs){
+					return $totalLogs;
+				},
+				'params' => array(),
+			),
+			'columns' => array(
+				'subject' => array(
+					'header' => array(
+						'value' => $his->text('topic_title'),
+						'class' => 'lefttext',
+					),
+					'data' => array(
+						'function' => function ($data) use ($that)
+						{
+							return $data['link'];
+						},
+					),
+					'sort' => array(
+						'default' => 'ms.subject',
+						'reverse' => 'ms.subject DESC',
+					),
+				),
+				'started_by' => array(
+					'header' => array(
+						'value' => $txt['started_by'],
+						'class' => 'lefttext',
+					),
+					'data' => array(
+						'db' => 'poster_link',
+					),
+					'sort' => array(
+						'default' => 'real_name_col',
+						'reverse' => 'real_name_col DESC',
+					),
+				),
+				'last_post' => array(
+					'header' => array(
+						'value' => $txt['last_post'],
+						'class' => 'lefttext',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<span class="smalltext">%1$s<br>' . $txt['by'] . ' %2$s</span>',
+							'params' => array(
+								'updated' => false,
+								'poster_updated_link' => false,
+							),
+						),
+					),
+					'sort' => array(
+						'default' => 'ml.id_msg DESC',
+						'reverse' => 'ml.id_msg',
+					),
+				),
+				'alert' => array(
+					'header' => array(
+						'value' => $txt['notify_what_how'],
+						'class' => 'lefttext',
+					),
+					'data' => array(
+						'function' => function ($topic) use ($txt)
+						{
+							$pref = $topic['notify_pref'];
+							$mode = !empty($topic['unwatched']) ? 0 : ($pref & 0x02 ? 3 : ($pref & 0x01 ? 2 : 1));
+							return $txt['notify_topic_' . $mode];
+						},
+					),
+				),
+				'delete' => array(
+					'header' => array(
+						'value' => '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);">',
+						'style' => 'width: 4%;',
+						'class' => 'centercol',
+					),
+					'data' => array(
+						'sprintf' => array(
+							'format' => '<input type="checkbox" name="notify_topics[]" value="%1$d" class="input_check">',
+							'params' => array(
+								'id' => false,
+							),
+						),
+						'class' => 'centercol',
+					),
+				),
+			),
+			'form' => array(
+				'href' => $scripturl . '?action=profile;area=notification;sa=topics',
+				'include_sort' => true,
+				'include_start' => true,
+				'hidden_fields' => array(
+					'u' => $memID,
+					'sa' => $context['menu_item_selected'],
+					$context['session_var'] => $context['session_id'],
+				),
+				'token' => $context['token_check'],
+			),
+			'additional_rows' => array(
+				array(
+					'position' => 'bottom_of_list',
+					'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" class="button_submit" />
+								<input type="submit" name="remove_notify_topics" value="' . $txt['notification_remove_pref'] . '" class="button_submit" />',
+					'align' => 'right',
+				),
+			),
+		);
+
+		// Create the notification list.
+		createList($listOptions);
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)

@@ -106,7 +106,7 @@ class TopicSolvedAdmin extends TopicSolvedTools
 		$config_vars = array(
 			array('desc', $this->name .'_menuDesc'),
 			array('check', $this->name .'_master', 'subtext' => $this->text('master_sub')),
-			array('text', $this->name .'_boards', 'size' => 30, 'subtext' => $this->text('boards_sub')),
+			array('boards', $this->name .'_boards', 'size' => 30, 'subtext' => $this->text('boards_sub')),
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
 		);
 
@@ -144,6 +144,9 @@ class TopicSolvedAdmin extends TopicSolvedTools
 				'subtext' => $this->text('selectGroups_sub'),
 				'multiple' => true,
 			);
+
+		// Disable this mod's hooks.
+		$this->disableHooks($config_vars);
 
 		if ($return_config)
 			return $config_vars;

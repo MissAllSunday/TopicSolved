@@ -30,6 +30,31 @@ class TopicSolvedTools extends Suki\Ohara
 	// Cheating!
 	public $name = 'TopicSolved';
 
+	// Define the hooks we are going to use.
+	protected $_availableHooks = array(
+		'actions' => 'integrate_actions',
+		'displayTopic' => 'integrate_display_topic',
+		'displayButtons' => 'integrate_display_buttons',
+		'messageIndex' => 'integrate_message_index',
+		'messageButtons' => 'integrate_messageindex_buttons',
+		'helpAdmin' => 'integrate_helpadmin',
+		'adminArea' => 'integrate_admin_areas',
+		'permissions' => 'integrate_load_permissions',
+		'log' => 'integrate_manage_logs',
+	);
+
+	// Tell SMF where the settings are!
+	protected $_overwriteHooks = array(
+		'adminArea' => array(
+			'func' => 'TopicSolvedAdmin::addAdminArea',
+			'file' => 'TopicSolvedAdmin.php',
+		),
+		'permissions' => array(
+			'func' => 'TopicSolvedAdmin::addPermissions',
+			'file' => 'TopicSolvedAdmin.php',
+		),
+	);
+
 /* 	Basic 3 stages:
 	0 means normal topics IE empty class
 	1 means solved topics
@@ -87,6 +112,36 @@ class TopicSolvedTools extends Suki\Ohara
 			WHERE id_topic IN({array_int:topic})',
 			$data
 		);
+	}
+
+	public function getTopicLogCount()
+	{
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}topic_solved_log',
+			array()
+		);
+		list ($totalLogs) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		return (int) $totalLogs;
+	}
+
+	public function getTopicLogs()
+	{
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT COUNT(*)
+			FROM {db_prefix}topic_solved_log',
+			array()
+		);
+		list ($totalLogs) = $smcFunc['db_fetch_row']($request);
+		$smcFunc['db_free_result']($request);
+
+		return (int) $totalLogs;
 	}
 
 	public function checkPermissions($topicOwner = 0)

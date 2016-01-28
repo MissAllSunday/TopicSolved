@@ -63,7 +63,15 @@ $txt['TopicSolved_mark_as_notsolved'] = 'Mark as not solved';
 $txt['TopicSolved_mark_as_solved_sure'] = 'Are you sure you want to mark this topic as {status}?';
 $txt['TopicSolved_solved'] = 'solved';
 $txt['TopicSolved_notsolved'] = 'not solved';
+$txt['TopicSolved_log_none'] = 'There are currently no topic solved entries';
 $txt['TopicSolved_log'] = 'Topic Solved log';
+$txt['TopicSolved_log_desc'] = 'The topic solved log tracks every topic been marked. To delete any errors from the database, mark the checkbox, and click the Remove button at the bottom of the page.';
+$txt['TopicSolved_topic_title'] = 'Topic';
+$txt['TopicSolved_disable_hook_title'] = '{modname} uses the following hooks';
+$txt['TopicSolved_disable_hook_desc'] = 'Disabling a hook wil make SMF to not recognize it anymore, so be careful.<br> Admin and Settings hooks cannot be disable to prevent been locked out from the mod\'s settings page.';
+$txt['TopicSolved_disable_hook'] = 'Disable {hook}';
+
+$txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';
 $txt['TopicSolved_'] = '';
 
