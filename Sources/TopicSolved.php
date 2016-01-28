@@ -61,6 +61,11 @@ class TopicSolved extends TopicSolvedTools
 		return redirectexit('topic='. $topicS);
 	}
 
+	public function addLogType(&$log_types)
+	{
+		$log_types[$this->name] = $this->logType;
+	}
+
 	public function addLog(&$log_functions)
 	{
 		global $context;

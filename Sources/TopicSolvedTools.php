@@ -29,6 +29,7 @@ class TopicSolvedTools extends Suki\Ohara
 {
 	// Cheating!
 	public $name = 'TopicSolved';
+	public $logType = 69;
 
 	// Define the hooks we are going to use.
 	protected $_availableHooks = array(
@@ -41,6 +42,7 @@ class TopicSolvedTools extends Suki\Ohara
 		'adminArea' => 'integrate_admin_areas',
 		'permissions' => 'integrate_load_permissions',
 		'log' => 'integrate_manage_logs',
+		'logType' => 'integrate_log_types',
 	);
 
 	// Tell SMF where the settings are!
