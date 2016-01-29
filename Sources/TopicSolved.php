@@ -41,6 +41,8 @@ class TopicSolved extends TopicSolvedTools
 
 	public function call()
 	{
+		global $board, $user_info;
+
 		// Get the solved ID.
 		$is_solved = $this->data('is_solved');
 		$topicS = $this->data('topic');
@@ -56,6 +58,13 @@ class TopicSolved extends TopicSolvedTools
 		));
 
 		// Log the change.
+		logAction($this->_statusFields[$is_solved], array(
+			'topic' => $this->data('topic'),
+			'board' => $board,
+			'is_solved' => $is_solved,
+		), $this->name);
+
+		// Show a message of something...
 
 		// Go back.
 		return redirectexit('topic='. $topicS);
@@ -89,11 +98,6 @@ class TopicSolved extends TopicSolvedTools
 		loadLanguage('Modlog');
 
 		$context['page_title'] = $this->text('log_title');
-		$context['page_desc'] = '';
-			$context['linktree'][] = array(
-		'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog',
-		'name' => $context['page_title'],
-	);
 
 		$_subActions = array('delete');
 		$items_per_page = 15;
@@ -133,44 +137,32 @@ class TopicSolved extends TopicSolvedTools
 					'data' => array(
 						'function' => function ($data) use ($that)
 						{
-							return ;
+							return $data['link'];
 						},
 					),
-					'sort' => array(
-						'default' => 'ms.subject',
-						'reverse' => 'ms.subject DESC',
-					),
 				),
-				'started_by' => array(
+				'marked_by' => array(
 					'header' => array(
-						'value' => $txt['started_by'],
+						'value' => $this->text('log_marked_by'),
 						'class' => 'lefttext',
 					),
 					'data' => array(
-						'db' => 'poster_link',
-					),
-					'sort' => array(
-						'default' => 'real_name_col',
-						'reverse' => 'real_name_col DESC',
+						'function' => function ($data) use ($that)
+						{
+							return $data['moderator_link'];
+						},
 					),
 				),
-				'last_post' => array(
+				'marked_as' => array(
 					'header' => array(
-						'value' => $txt['last_post'],
+						'value' => $this->text('log_marked_as'),
 						'class' => 'lefttext',
 					),
 					'data' => array(
-						'sprintf' => array(
-							'format' => '<span class="smalltext">%1$s<br>' . $txt['by'] . ' %2$s</span>',
-							'params' => array(
-								'updated' => false,
-								'poster_updated_link' => false,
-							),
-						),
-					),
-					'sort' => array(
-						'default' => 'ml.id_msg DESC',
-						'reverse' => 'ml.id_msg',
+						'function' => function ($data) use ($that)
+						{
+							return $data['is_solved'];
+						},
 					),
 				),
 				'delete' => array(

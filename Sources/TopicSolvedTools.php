@@ -134,22 +134,50 @@ class TopicSolvedTools extends Suki\Ohara
 
 	public function getTopicLogs($start, $items_per_page)
 	{
-		global $smcFunc;
+		global $smcFunc, $txt;
+
+		$entries = array();
 
 		$result = $smcFunc['db_query']('', '
-				SELECT
-					lm.id_action, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_topic, lm.id_msg, lm.extra, t.id_first_msg, m.subject,
-					mem.real_name, mg.group_name
-				FROM {db_prefix}log_actions AS lm
-					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
-					LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
-					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic)
-					LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
-					WHERE id_log = {int:log_type}
-				ORDER BY lm.id_action DESC
-				LIMIT ' . $start . ', ' . $items_per_page,
-				array('log_type' => $this->logType, 'reg_group_id' => 0,)
+			SELECT
+				lm.id_action, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_topic, lm.id_msg, lm.extra, t.id_first_msg, m.subject,
+				mem.real_name, mg.group_name
+			FROM {db_prefix}log_actions AS lm
+				LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+				LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
+				LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic)
+				LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+				WHERE id_log = {int:log_type}
+			ORDER BY lm.id_action DESC
+			LIMIT ' . $start . ', ' . $items_per_page,
+			array('log_type' => $this->logType, 'reg_group_id' => 0,)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($result))
+		{
+			if (!empty($row['extra']))
+				$row['extra'] = json_decode($row['extra'], true);
+
+			$entries[$row['id_action']] = array(
+				'id' => $row['id_action'],
+				'position' => empty($row['real_name']) && empty($row['group_name']) ? $txt['guest'] : $row['group_name'],
+				'moderator_link' => $row['id_member'] ? '<a href="' . $this->scriptUrl . '?action=profile;u=' . $row['id_member'] . '">' . $row['real_name'] . '</a>' : (empty($row['real_name']) ? ($txt['guest'] . (!empty($row['extra']['member_acted']) ? ' (' . $row['extra']['member_acted'] . ')' : '')) : $row['real_name']),
+				'time' => timeformat($row['log_time']),
+				'timestamp' => forum_time(true, $row['log_time']),
+				'editable' => substr($row['action'], 0, 8) !== 'clearlog',
+				'extra' => $row['extra'],
+				'action' => $row['action'],
+				'action_text' => isset($row['action_text']) ? $row['action_text'] : '',
+				'subject' => $row['subject'],
+				'href' => $this->scriptUrl . '?msg=' . $row['id_msg'],
+				'link' => '<a href="' . $this->scriptUrl . '?topic='. $row['id_topic'] .'.0">' . $row['subject'] . '</a>',
+				'is_solved' => (!empty($row['extra']['is_solved']) ? $this->_statusFields[$row['extra']['is_solved']] : '')
 			);
+		}
+
+		$smcFunc['db_free_result']($result);
+
+		return $entries;
 	}
 
 	public function checkPermissions($topicOwner = 0)

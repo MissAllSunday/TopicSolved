@@ -57,7 +57,7 @@ class TopicSolvedAdmin extends TopicSolvedTools
 			),
 		);
 
-		$areas['maintenance']['areas']['logs']['subsections']['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#', 'disabled' => !$this->enable('master'));
+		$areas['maintenance']['areas']['logs']['subsections']['topicsolvedlog'] = array($this->text('modName'), 'TopicSolved::displayLog#', 'disabled' => !$this->enable('master'));
 	}
 
 	public function call()
