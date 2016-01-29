@@ -122,8 +122,9 @@ class TopicSolvedTools extends Suki\Ohara
 
 		$request = $smcFunc['db_query']('', '
 			SELECT COUNT(*)
-			FROM {db_prefix}topic_solved_log',
-			array()
+			FROM {db_prefix}log_actions
+			WHERE id_log = {int:log_type}',
+			array('log_type' => $this->logType)
 		);
 		list ($totalLogs) = $smcFunc['db_fetch_row']($request);
 		$smcFunc['db_free_result']($request);
@@ -131,19 +132,24 @@ class TopicSolvedTools extends Suki\Ohara
 		return (int) $totalLogs;
 	}
 
-	public function getTopicLogs()
+	public function getTopicLogs($start, $items_per_page)
 	{
 		global $smcFunc;
 
-		$request = $smcFunc['db_query']('', '
-			SELECT COUNT(*)
-			FROM {db_prefix}topic_solved_log',
-			array()
-		);
-		list ($totalLogs) = $smcFunc['db_fetch_row']($request);
-		$smcFunc['db_free_result']($request);
-
-		return (int) $totalLogs;
+		$result = $smcFunc['db_query']('', '
+				SELECT
+					lm.id_action, lm.id_member, lm.ip, lm.log_time, lm.action, lm.id_topic, lm.id_msg, lm.extra, t.id_first_msg, m.subject,
+					mem.real_name, mg.group_name
+				FROM {db_prefix}log_actions AS lm
+					LEFT JOIN {db_prefix}members AS mem ON (mem.id_member = lm.id_member)
+					LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = CASE WHEN mem.id_group = {int:reg_group_id} THEN mem.id_post_group ELSE mem.id_group END)
+					LEFT JOIN {db_prefix}topics AS t ON (t.id_topic = lm.id_topic)
+					LEFT JOIN {db_prefix}messages AS m ON (m.id_msg = t.id_first_msg)
+					WHERE id_log = {int:log_type}
+				ORDER BY lm.id_action DESC
+				LIMIT ' . $start . ', ' . $items_per_page,
+				array('log_type' => $this->logType, 'reg_group_id' => 0,)
+			);
 	}
 
 	public function checkPermissions($topicOwner = 0)

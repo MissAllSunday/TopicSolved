@@ -72,61 +72,68 @@ class TopicSolved extends TopicSolvedTools
 
 		// Menu stuff.
 		$context[$context['admin_menu_name']]['tab_data']['tabs']['topicsolvedlog'] = array(
-			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog;desc',
-			'label' => $this->text('log'),
+			'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog',
+			'label' => $this->text('log_title'),
 			'description' => $this->text('log_desc'),
 		);
 
 		// Add our method.
-		$log_functions['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#', 'disabled' => $this->enable('master'));
+		$log_functions['topicsolvedlog'] = array('TopicSolved.php', 'TopicSolved::displayLog#', 'disabled' => !$this->enable('master'));
 	}
 
 	public function displayLog()
 	{
-		global $context, $smcFunc;
+		global $txt, $context, $scripturl, $sourcedir, $smcFunc, $user_info;
 
-		loadtemplate($this->name);
 		loadLanguage($this->name);
+		loadLanguage('Modlog');
+
+		$context['page_title'] = $this->text('log_title');
+		$context['page_desc'] = '';
+			$context['linktree'][] = array(
+		'url' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog',
+		'name' => $context['page_title'],
+	);
 
 		$_subActions = array('delete');
+		$items_per_page = 15;
+		$start = !empty($_REQUEST['start']) ? ((int) $_REQUEST['start']) : 0;
+		$total = $this->getTopicLogCount();
 
 		require_once($this->sourceDir . '/Subs-List.php');
 
 		// Quick fix for lower php versions.
 		$that = $this;
 
-		// Get the log count.
-		$totalLogs = $this->getTopicLogCount();
-
 		// Do the topic notifications.
 		$listOptions = array(
-			'id' => 'topic_solved_log',
+			'id' => 'topicsolvedlog',
 			'width' => '100%',
-			'items_per_page' => 15,
+			'title' => $this->text('log_title'),
+			'items_per_page' => $items_per_page,
 			'no_items_label' => $this->text('log_none'),
 			'no_items_align' => 'left',
 			'base_href' => $this->scriptUrl . '?action=admin;area=logs;sa=topicsolvedlog',
-			'default_sort_col' => 'desc',
 			'get_items' => array(
-				'function' => 'TopicSolvedTools::getLog#',
-				'params' => array(),
+				'function' => $this->name .'::getTopicLogs#',
+				'params' => array($start, $items_per_page),
 			),
 			'get_count' => array(
-				'function' => function () use ($totalLogs){
-					return $totalLogs;
+				'function' => function() use ($total)
+				{
+					return $total;
 				},
-				'params' => array(),
 			),
 			'columns' => array(
 				'subject' => array(
 					'header' => array(
-						'value' => $his->text('topic_title'),
+						'value' => $this->text('topic_title'),
 						'class' => 'lefttext',
 					),
 					'data' => array(
 						'function' => function ($data) use ($that)
 						{
-							return $data['link'];
+							return ;
 						},
 					),
 					'sort' => array(
@@ -166,20 +173,6 @@ class TopicSolved extends TopicSolvedTools
 						'reverse' => 'ml.id_msg',
 					),
 				),
-				'alert' => array(
-					'header' => array(
-						'value' => $txt['notify_what_how'],
-						'class' => 'lefttext',
-					),
-					'data' => array(
-						'function' => function ($topic) use ($txt)
-						{
-							$pref = $topic['notify_pref'];
-							$mode = !empty($topic['unwatched']) ? 0 : ($pref & 0x02 ? 3 : ($pref & 0x01 ? 2 : 1));
-							return $txt['notify_topic_' . $mode];
-						},
-					),
-				),
 				'delete' => array(
 					'header' => array(
 						'value' => '<input type="checkbox" class="input_check" onclick="invertAll(this, this.form);">',
@@ -202,24 +195,17 @@ class TopicSolved extends TopicSolvedTools
 				'include_sort' => true,
 				'include_start' => true,
 				'hidden_fields' => array(
-					'u' => $memID,
-					'sa' => $context['menu_item_selected'],
+					'u' => $user_info['id'],
+					'sa' => 'topicsolvedlog',
 					$context['session_var'] => $context['session_id'],
-				),
-				'token' => $context['token_check'],
-			),
-			'additional_rows' => array(
-				array(
-					'position' => 'bottom_of_list',
-					'value' => '<input type="submit" name="edit_notify_topics" value="' . $txt['notifications_update'] . '" class="button_submit" />
-								<input type="submit" name="remove_notify_topics" value="' . $txt['notification_remove_pref'] . '" class="button_submit" />',
-					'align' => 'right',
 				),
 			),
 		);
 
 		// Create the notification list.
 		createList($listOptions);
+		$context['sub_template'] = 'show_list';
+		$context['default_list'] = 'topicsolvedlog';
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
