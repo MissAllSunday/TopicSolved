@@ -180,6 +180,20 @@ class TopicSolvedTools extends Suki\Ohara
 		return $entries;
 	}
 
+	public function deleteTopicLogs($data = array())
+	{
+		global $smcFunc;
+
+		// Ane mepty $data var means all entries will be deleted!
+		$smcFunc['db_query']('', '
+			DELETE FROM {db_prefix}log_actions
+			WHERE id_log = {int:log_type}
+			'. (!empty($data) ? '
+				AND id_action IN ({array_int:data})' : '') .'',
+			array('log_type' => $this->logType, 'data' => $data)
+		);
+	}
+
 	public function checkPermissions($topicOwner = 0)
 	{
 		global $user_info;

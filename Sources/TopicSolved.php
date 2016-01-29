@@ -97,6 +97,16 @@ class TopicSolved extends TopicSolvedTools
 		loadLanguage($this->name);
 		loadLanguage('Modlog');
 
+		// Deleting?
+		if ($this->validate('remove') || $this->validate('removeall'))
+		{
+			checkSession();
+			validateToken('mod-ml');
+
+			$deleteData = $this->data($this->name);
+			$this->deleteTopicLogs((!empty($deleteData) && $this->validate('remove')) ? $deleteData : array());
+		}
+
 		$context['page_title'] = $this->text('log_title');
 
 		$_subActions = array('delete');
@@ -149,7 +159,7 @@ class TopicSolved extends TopicSolvedTools
 					'data' => array(
 						'function' => function ($data) use ($that)
 						{
-							return $data['moderator_link'];
+							return $data['moderator_link'] .' - '. $data['position'];
 						},
 					),
 				),
@@ -173,7 +183,7 @@ class TopicSolved extends TopicSolvedTools
 					),
 					'data' => array(
 						'sprintf' => array(
-							'format' => '<input type="checkbox" name="notify_topics[]" value="%1$d" class="input_check">',
+							'format' => '<input type="checkbox" name="'. $this->name .'[]" value="%1$d" class="input_check">',
 							'params' => array(
 								'id' => false,
 							),
@@ -183,18 +193,24 @@ class TopicSolved extends TopicSolvedTools
 				),
 			),
 			'form' => array(
-				'href' => $scripturl . '?action=profile;area=notification;sa=topics',
-				'include_sort' => true,
-				'include_start' => true,
+				'href' => $scripturl . '?action=admin;area=logs;sa=topicsolvedlog',
 				'hidden_fields' => array(
 					'u' => $user_info['id'],
-					'sa' => 'topicsolvedlog',
 					$context['session_var'] => $context['session_id'],
 				),
+				'token' => 'mod-ml',
 			),
+			'additional_rows' => array(
+			array(
+				'position' => 'below_table_data',
+				'value' => '<input type="submit" name="remove" value="' . $txt['modlog_remove'] . '" data-confirm="' . $txt['modlog_remove_selected_confirm'] . '" class="button_submit you_sure">
+					<input type="submit" name="removeall" value="' . $txt['modlog_removeall'] . '" data-confirm="' . $txt['modlog_remove_all_confirm'] . '" class="button_submit you_sure">',
+				'class' => 'floatright',
+			)),
 		);
 
 		// Create the notification list.
+		createToken('mod-ml');
 		createList($listOptions);
 		$context['sub_template'] = 'show_list';
 		$context['default_list'] = 'topicsolvedlog';
