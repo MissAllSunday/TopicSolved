@@ -192,7 +192,12 @@ class TopicSolvedAdmin extends TopicSolvedTools
 			validateToken('mod-ml');
 
 			$deleteData = $this->data($this->name);
-			$this->deleteTopicLogs((!empty($deleteData) && $this->validate('remove')) ? $deleteData : array());
+
+			if ((!empty($deleteData) && $this->validate('remove')))
+				$this->deleteTopicLogs($deleteData);
+
+			elseif($this->validate('removeall'))
+				$this->deleteTopicLogs();
 		}
 
 		$context['page_title'] = $this->text('log_title');
@@ -259,7 +264,7 @@ class TopicSolvedAdmin extends TopicSolvedTools
 					'data' => array(
 						'function' => function ($data) use ($that)
 						{
-							return $data['is_solved'];
+							return $data['is_solved'] .' - '. $data['time'];
 						},
 					),
 				),
