@@ -295,22 +295,4 @@ class TopicSolvedAdmin extends TopicSolvedTools
 		$context['sub_template'] = 'show_list';
 		$context['default_list'] = 'topicsolvedlog';
 	}
-
-	protected function getGroups()
-	{
-		global $smcFunc;
-
-		$request = $smcFunc['db_query']('', '
-			SELECT id_group, group_name
-			FROM {db_prefix}membergroups',
-			array()
-		);
-		$return = array();
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$return[$row['id_group']] = $row['group_name'];
-
-		$smcFunc['db_free_result']($request);
-
-		return $return;
-	}
 }

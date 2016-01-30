@@ -48,17 +48,17 @@ class TopicSolvedTools extends Suki\Ohara
 	// Tell SMF where the settings are!
 	protected $_overwriteHooks = array(
 		'adminArea' => array(
-			'func' => 'TopicSolvedAdmin::addAdminArea',
+			'func' => 'TopicSolvedAdmin::addAdminArea#',
 			'file' => 'TopicSolvedAdmin.php',
 		),
 		'permissions' => array(
-			'func' => 'TopicSolvedAdmin::addPermissions',
+			'func' => 'TopicSolvedAdmin::addPermissions#',
 			'file' => 'TopicSolvedAdmin.php',
 		),
 	);
 
 /* 	Basic 3 stages:
-	0 means normal topics IE empty class
+	0 means normal topics, IE empty class
 	1 means solved topics
 	2 means topics not solved */
 	protected $_statusFields = array('', 'notsolved', 'solved');
@@ -256,5 +256,23 @@ class TopicSolvedTools extends Suki\Ohara
 		}
 
 		return $status;
+	}
+
+	protected function getGroups()
+	{
+		global $smcFunc;
+
+		$request = $smcFunc['db_query']('', '
+			SELECT id_group, group_name
+			FROM {db_prefix}membergroups',
+			array()
+		);
+		$return = array();
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return[$row['id_group']] = $row['group_name'];
+
+		$smcFunc['db_free_result']($request);
+
+		return $return;
 	}
 }

@@ -52,5 +52,28 @@ if ((SMF == 'SSI') && !$user_info['is_admin'])
 			null
 		);
 
+	// Create the scheduled task.
+	if (empty($context['uninstalling']))
+		$smcFunc['db_insert'](
+			'insert',
+			'{db_prefix}scheduled_tasks',
+			array(
+				'id_task' => 'int',
+				'next_time' => 'int',
+				'time_offset' => 'int',
+				'time_regularity' => 'int',
+				'time_unit' => 'string',
+				'disabled' => 'int',
+				'task' => 'string',
+				'callable' => 'string',
+			),
+			array(
+				0, 0, 0, 1, 'd', 0, 'TopicSolved', 'TopicSolved.php|TopicSolved::scheduledTask#',
+			),
+			array(
+				'id_task',
+			)
+		);
+
 if (SMF == 'SSI')
 	echo 'Database changes are complete!';

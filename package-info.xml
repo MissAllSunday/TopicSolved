@@ -15,7 +15,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		</license>
 		<database>install.php</database>
 		<hook function="TopicSolved::runTimeHooks" hook="integrate_load_theme" file="$sourcedir/TopicSolved.php" object="true"></hook>
-		<hook function="$sourcedir/TopicSolvedAdmin.php" hook="integrate_admin_include" ></hook>
 		<credits url="http://missallsunday.com" license="MPL 2.0" copyright="Suki" licenseurl="https://www.mozilla.org/MPL/2.0/">Topic Solved mod</credits>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
 		<require-dir name="Sources/ohara" destination="$sourcedir">Source library</require-dir>
@@ -26,8 +25,9 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 	</install>
 
 	<uninstall for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
-		<hook function="TopicSolved::runTimeHooks" hook="integrate_admin_include" file="$sourcedir/TopicSolved.php" object="true" reverse="true"></hook>
+		<hook function="TopicSolved::runTimeHooks" hook="integrate_load_theme" file="$sourcedir/TopicSolved.php" object="true" reverse="true"></hook>
 		<database>install.php</database>
+		<code>removeScheduledTask.php</code>
 		<remove-file name="$sourcedir/TopicSolved.php" />
 		<remove-file name="$sourcedir/TopicSolvedTools.php" />
 		<remove-file name="$sourcedir/TopicSolvedAdmin.php" />
