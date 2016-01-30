@@ -46,6 +46,8 @@ class TopicSolved extends TopicSolvedTools
 		// Get the solved ID.
 		$is_solved = $this->data('is_solved');
 		$topicS = $this->data('topic');
+		$starter = $this->data('starter');
+		$staff = $this->setting('staff') ? json_decode($this->setting('staff'), true) : array();
 
 		// Meh...
 		if (empty($is_solved) || empty($topicS))
@@ -59,12 +61,22 @@ class TopicSolved extends TopicSolvedTools
 
 		// Log the change.
 		logAction($this->_statusFields[$is_solved], array(
-			'topic' => $this->data('topic'),
+			'topic' => $topicS,
 			'board' => $board,
 			'is_solved' => $is_solved,
 		), $this->name);
 
-		// Show a message of something...
+		// Lock the topic if needed.
+		if ($this->enable('lockTopic') && $is_solved == 2)
+		{
+			// The OP?
+			if (($this->setting('lockTopicWhen')  == 'op' || $this->setting('lockTopicWhen')  == 'both') && ($starter && $starter == $user_info['id']))
+				$this->lockTopic($topicS);
+
+			// Perhaps a staff member?
+			elseif (($this->setting('lockTopicWhen')  == 'staff' || $this->setting('lockTopicWhen')  == 'both') && !empty($staff) && array_intersect($user_info['groups'], $staff))
+				$this->lockTopic($topicS);
+		}
 
 		// Go back.
 		return redirectexit('topic='. $topicS);
@@ -174,7 +186,7 @@ class TopicSolved extends TopicSolvedTools
 		$context['normal_buttons'][$this->name] = array(
 			'text' => $this->name .'_mark_as_'. $this->_statusFields[$inverted],
 			'lang' => true,
-			'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';is_solved='. $inverted,
+			'url' => $this->scriptUrl . '?action='. $this->name .';topic=' . $context['current_topic'] . ';is_solved='. $inverted .';starter='. $context['topicinfo']['id_member_started'],
 			'class' => 'you_sure '. $this->_statusFields[$inverted],
 			'custom' => 'data-confirm="'. $confirmText .'"'
 		);

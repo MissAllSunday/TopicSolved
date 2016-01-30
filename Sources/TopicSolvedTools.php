@@ -192,6 +192,24 @@ class TopicSolvedTools extends Suki\Ohara
 		);
 	}
 
+	public function lockTopic($topicID = 0)
+	{
+		global $smcFunc;
+
+		if (empty($topicID))
+			return false;
+
+		$smcFunc['db_query']('', '
+			UPDATE {db_prefix}topics
+			SET locked = {int:locked}
+			WHERE id_topic = {int:topicID}',
+			array(
+				'locked' => 1,
+				'topicID' => $topicID,
+			)
+		);
+	}
+
 	public function checkPermissions($topicOwner = 0)
 	{
 		global $user_info;

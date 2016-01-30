@@ -112,16 +112,6 @@ class TopicSolvedAdmin extends TopicSolvedTools
 			array('check', $this->name .'_staffRespond', 'subtext' => $this->text('staffRespond_sub')),
 		);
 
-		$status = $this->getStatus();
-		$statusAdmin = array();
-
-		if (!empty($statusAdmin))
-			$config_vars[] = array('select', $this->name .'_staffRespondStatus',
-				$statusAdmin,
-				'subtext' => $this->text('staffRespondStatus_sub'),
-				'multiple' => true,
-			);
-
 		$config_vars[] = array('int', $this->name .'_daysNotResponded', 'size' => 3, 'subtext' => $this->text('daysNotResponded_sub'));
 		$config_vars[] = array('check', $this->name .'_lockTopic', 'subtext' => $this->text('lockTopic_sub'));
 
@@ -141,7 +131,7 @@ class TopicSolvedAdmin extends TopicSolvedTools
 		$groups = $this->getGroups();
 
 		if (!empty($groups))
-			$config_vars[] = array('select', $this->name .'_selectGroups',
+			$config_vars[] = array('select', $this->name .'_staff',
 				$groups,
 				'subtext' => $this->text('selectGroups_sub'),
 				'multiple' => true,
@@ -166,9 +156,6 @@ class TopicSolvedAdmin extends TopicSolvedTools
 
 		if ($this->validate('save'))
 		{
-			// Have to directly mess with the super duper global!
-			$_POST[$this->name .'_boards'] = $this->commaSeparated($this->data($this->name . '_boards'), 'numeric');
-
 			checkSession();
 			saveDBSettings($config_vars);
 			redirectexit('action=admin;area='. $this->name .';sa='. $this->_sa);
@@ -315,11 +302,8 @@ class TopicSolvedAdmin extends TopicSolvedTools
 
 		$request = $smcFunc['db_query']('', '
 			SELECT id_group, group_name
-			FROM {db_prefix}membergroups
-			WHERE id_group > {int:admin}',
-			array(
-				'admin' => 1,
-			)
+			FROM {db_prefix}membergroups',
+			array()
 		);
 		$return = array();
 		while ($row = $smcFunc['db_fetch_assoc']($request))
