@@ -192,7 +192,7 @@ class TopicSolvedTools extends Suki\Ohara
 		);
 	}
 
-	public function lockTopic($topicID = 0)
+	public function lockTopic($topicID = 0, $lock = 0)
 	{
 		global $smcFunc;
 
@@ -204,7 +204,7 @@ class TopicSolvedTools extends Suki\Ohara
 			SET locked = {int:locked}
 			WHERE id_topic = {int:topicID}',
 			array(
-				'locked' => 1,
+				'locked' => $lock,
 				'topicID' => $topicID,
 			)
 		);

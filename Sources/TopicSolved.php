@@ -67,15 +67,18 @@ class TopicSolved extends TopicSolvedTools
 		), $this->name);
 
 		// Lock the topic if needed.
-		if ($this->enable('lockTopic') && $is_solved == 2)
+		if ($this->enable('lockTopic'))
 		{
+			// Lock or unlock?
+			$lock = $is_solved == 2 ? 1 : 0;
+
 			// The OP?
 			if (($this->setting('lockTopicWhen')  == 'op' || $this->setting('lockTopicWhen')  == 'both') && ($starter && $starter == $user_info['id']))
-				$this->lockTopic($topicS);
+				$this->lockTopic($topicS, $lock);
 
 			// Perhaps a staff member?
 			elseif (($this->setting('lockTopicWhen')  == 'staff' || $this->setting('lockTopicWhen')  == 'both') && !empty($staff) && array_intersect($user_info['groups'], $staff))
-				$this->lockTopic($topicS);
+				$this->lockTopic($topicS, $lock);
 		}
 
 		// Go back.
