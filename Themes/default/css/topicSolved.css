@@ -20,8 +20,18 @@
 	background-image:none;
 }
 
+.buttonlist a.solved
+{
+	border-color : #9ED54C;
+}
+
 .notsolved, .buttonlist a.notsolved
 {
-	background-color: #FEE !important;
+	background-color: #FEE  !important;
 	background-image:none;
+}
+
+.buttonlist a.notsolved
+{
+	border-color : #C34;
 }
