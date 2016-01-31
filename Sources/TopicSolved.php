@@ -157,7 +157,7 @@ class TopicSolved extends TopicSolvedTools
 		// Because reasons!
 		foreach ($this->getStatus() as $class => $icon)
 			$injectJS  .= '
-		$(".'. $class .'").children(".board_icon").empty().addClass("'. $icon .'");';
+		$(".'. $this->sanitize($class) .'").children(".board_icon").empty().addClass("'. $this->sanitize($icon) .'");';
 
 		// Close the JS
 		$injectJS  .= '
