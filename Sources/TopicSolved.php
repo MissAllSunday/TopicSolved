@@ -197,6 +197,8 @@ class TopicSolved extends TopicSolvedTools
 
 	public function scheduledTask()
 	{
+		global $smcFunc;
+
 		// Mod's gotta be enable and the "check staff responses" setting needs to be on! also, at least 1 day has to pass.
 		if (!$this->enable('master') || !$this->enable('staffRespond') || !$this->enable('daysNotResponded'))
 			return true;
