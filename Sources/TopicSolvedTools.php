@@ -192,20 +192,23 @@ class TopicSolvedTools extends Suki\Ohara
 		);
 	}
 
-	public function lockTopic($topicID = 0, $lock = 0)
+	public function lockTopic($topicID = array(), $lock = 0)
 	{
 		global $smcFunc;
 
 		if (empty($topicID))
 			return false;
 
+		// Work with arrays.
+		$topicID = (array) $topicID;
+
 		$smcFunc['db_query']('', '
 			UPDATE {db_prefix}topics
 			SET locked = {int:locked}
-			WHERE id_topic = {int:topicID}',
+			WHERE id_topic IN({array_int:topic})',
 			array(
 				'locked' => $lock,
-				'topicID' => $topicID,
+				'topic' => $topicID,
 			)
 		);
 	}

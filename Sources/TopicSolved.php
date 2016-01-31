@@ -203,6 +203,7 @@ class TopicSolved extends TopicSolvedTools
 
 		$days = $this->enable('daysNotResponded');
 		$staff = $this->enable('staff') ? json_decode($this->setting('staff'), true) : array();
+		$tBoards = explode(',', $this->setting('boards'));
 
 		// Get the start and end timestamps.
 		$dayIni = new DateTime('-'. $days .' days 00:00');
@@ -219,28 +220,30 @@ class TopicSolved extends TopicSolvedTools
 			FROM {db_prefix}thank_you_post as t
 				LEFT JOIN {db_prefix}messages as ml ON (ml.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members as m ON (m.id_member = ml.id_member)
-			WHERE ml.poster_time BETWEEN {int:from} AND {int:to}
+			WHERE t.id_board IN ({array_int:boards})
+				AND (ml.poster_time BETWEEN {int:from} AND {int:to})
 			', array(
 				'from' => $from,
 				'to' => $to,
+				'boards' => $tBoards,
 			)
 		);
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$data[$row['id_topic']] = $row;
 
+		$smcFunc['db_free_result']($request);
+
 		// Nada?
 		if (empty($data))
 			return true;
 
-		$smcFunc['db_free_result']($request);
-
 		// OK... time to do some checks.
 		foreach ($data as $k => $v)
 		{
-			// Was the OP the last poster too?
+			// Was the OP the last poster?
 			if ($v['member_start'] == $v['member_last'])
-				$not[] = $v['id_topic'];
+				$not[] = $k;
 
 			// No? then check if its a staff user.
 			else
@@ -253,9 +256,38 @@ class TopicSolved extends TopicSolvedTools
 					$groups[] = $v['id_post_group'];
 
 				if (array_intersect($groups, $staff))
-					$solved[] = $v['id_topic'];
+					$solved[] = $k;
 			}
 		}
+
+		// Mark as not solved.
+		if (!empty($not))
+		{
+			$this->changeStatus(array(
+				'is_solved' => 1,
+				'topic' => $not,
+			));
+
+			// Also unlock the topic if needed.
+			if ($this->enable('lockTopic') && $this->setting('lockTopicWhen')  == 'op' || $this->setting('lockTopicWhen')  == 'both')
+				$this->lockTopic($not, 0);
+		}
+
+		// Mark as solved.
+		if (!empty($solved))
+		{
+			$this->changeStatus(array(
+				'is_solved' => 2,
+				'topic' => $solved,
+			));
+
+			// Also lock the topic if needed.
+			if ($this->enable('lockTopic') && $this->setting('lockTopicWhen')  == 'staff' || $this->setting('lockTopicWhen')  == 'both')
+				$this->lockTopic($not, 1);
+		}
+
+		// Done!
+		return true;
 	}
 }
 
