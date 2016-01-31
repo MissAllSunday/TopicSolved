@@ -1,6 +1,6 @@
 .solved div.board_icon, .notsolved div.board_icon
 {
-	font-size: 250%;
+	font-size: 200%;
 	display: table-cell;
 }
 
@@ -17,13 +17,11 @@
 .solved, .buttonlist a.solved
 {
 	background-color: #F0F2DD !important;
-	border-color : #9ED54C !important;
 	background-image:none;
 }
 
 .notsolved, .buttonlist a.notsolved
 {
 	background-color: #FEE !important;
-	border-color : #C34 !important;
 	background-image:none;
 }
