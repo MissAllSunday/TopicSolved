@@ -102,7 +102,7 @@ class TopicSolved extends TopicSolvedTools
 		);
 
 		// Add our method.
-		$log_functions['topicsolvedlog'] = array('TopicSolvedAdmin.php', 'TopicSolvedAdmin::displayLog#', 'disabled' => !$this->enable('master'));
+		$log_functions['topicsolvedlog'] = array($this->name .'Admin.php', $this->name .'Admin::displayLog#', 'disabled' => !$this->enable('master'));
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
@@ -115,7 +115,7 @@ class TopicSolved extends TopicSolvedTools
 
 		// Since we're already here...
 		loadCSSFile($this->bootstrapCDN, array('external' => true));
-		loadCSSFile('TopicSolved.css');
+		loadCSSFile($this->name .'.css');
 	}
 
 	public function addMessageIndex(&$message_index_selects, &$message_index_tables, &$message_index_parameters)
@@ -128,7 +128,7 @@ class TopicSolved extends TopicSolvedTools
 
 		// Since we're already here...
 		loadCSSFile($this->bootstrapCDN, array('external' => true));
-		loadCSSFile('TopicSolved.css');
+		loadCSSFile($this->name .'.css');
 	}
 
 	public function addMessageButtons()
