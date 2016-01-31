@@ -218,8 +218,8 @@ class TopicSolved extends TopicSolvedTools
 
 		// Queries, queries everywhere!
 		$request = $smcFunc['db_query']('', '
-			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group
-			FROM {db_prefix}thank_you_post as t
+			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved, ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group
+			FROM {db_prefix}topics as t
 				LEFT JOIN {db_prefix}messages as ml ON (ml.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members as m ON (m.id_member = ml.id_member)
 			WHERE t.id_board IN ({array_int:boards})
