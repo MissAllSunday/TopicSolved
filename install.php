@@ -4,7 +4,7 @@
  * @package Topic Solved mod
  * @version 1.0
  * @author Suki <missallsunday@simplemachines.org>
- * @copyright 2012 Suki
+ * @copyright 2016 Suki
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  */
 
