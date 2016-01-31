@@ -284,8 +284,8 @@ class TopicSolved extends TopicSolvedTools
 			));
 
 			// Also lock the topic if needed.
-			if ($this->enable('lockTopic') && $this->setting('lockTopicWhen')  == 'staff' || $this->setting('lockTopicWhen')  == 'both')
-				$this->lockTopic($not, 1);
+			if ($this->enable('lockTopic') && $this->setting('lockTopicWhen')  == 'staff' || $this->setting('lockTopicWhen') == 'both')
+				$this->lockTopic($solved, 1);
 		}
 
 		// Done!
