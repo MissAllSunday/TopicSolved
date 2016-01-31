@@ -1,13 +1,24 @@
-Topic solved mod for SMF 2.0.x
+**TopicSolved**, http://missallsunday.com
 
-3 possible states for a topic:
-	-Solved
-	-Not solved
-	-Waiting response from staff
 
-Automatically mark a topic as solved if the last response was from a staff member and X amount of days has passed since the last reponse.
-Automatically mark a topic as not solved if the last response was from the OP and X amount of days has passed since the last response.
-Permissions to set a topic as solved or not solved, topic owner should be able to mark a topic too.
-Change the message background color according to the topic status.
+The software is licensed under [MPL 2.0 license](https://www.mozilla.org/MPL/).
 
-This mod is licensed under the MPL 2.0 License.
+######Requirements:
+
+- SMF 2.1.x or greater.
+- PHP 5.3 or greater.
+
+Adds an option to mark topics as solved / not solved.
+
+######Features:
+
+- No file edits.
+- Option to automatically mark topics as not/solved if the last poster is either the OP or someone marked as staff.
+- Select the membergroups to be marked as staff.
+- Permissions to set a topic as solved or not solved, topic owner should be able to mark a topic too.
+- Logs every action.
+- Option to select on which boards the mod is gonna work.
+- Option to un/lock the topic when marked as not/solved.
+- Change the message background color according to the topic status.
+- Option to change the css icon.
+- Uses Font Awesome icons.
