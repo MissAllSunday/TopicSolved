@@ -137,6 +137,10 @@ class TopicSolvedAdmin extends TopicSolvedTools
 				'multiple' => true,
 			);
 
+		// Permissions.
+		$config_vars[] = array('permissions', $this->name .'_own', 0, $txt['permissionname_simple_TopicSolved_own']);
+		$config_vars[] = array('permissions', $this->name .'_any', 0, $txt['permissionname_simple_TopicSolved_any']);
+
 		// Disable this mod's hooks.
 		$this->disableHooks($config_vars);
 

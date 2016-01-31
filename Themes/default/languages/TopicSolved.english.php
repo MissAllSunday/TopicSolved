@@ -29,7 +29,7 @@ global $txt, $scripturl;
 
 $txt['TopicSolved_modName'] = 'Topic Solved';
 $txt['TopicSolved_settingsGeneral'] = 'General';
-$txt['TopicSolved_menuDesc'] = 'You can configure the Topic Solved mod here.';
+$txt['TopicSolved_menuDesc'] = 'You can configure the Topic Solved mod here.<br> Don\'t forget to set the appropiate permissions for each group.';
 $txt['TopicSolved_master'] = 'Enable the Topic Solved mod';
 $txt['TopicSolved_master_sub'] = 'This is the master setting, must be enable for the mod to work properly';
 $txt['TopicSolved_boards'] = 'The Board IDs where the mod will work';
