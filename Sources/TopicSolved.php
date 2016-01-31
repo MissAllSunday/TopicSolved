@@ -47,7 +47,7 @@ class TopicSolved extends TopicSolvedTools
 		$is_solved = $this->data('is_solved');
 		$topicS = $this->data('topic');
 		$starter = $this->data('starter');
-		$staff = $this->setting('staff') ? json_decode($this->setting('staff'), true) : array();
+		$staff = $this->enable('staff') ? json_decode($this->setting('staff'), true) : array();
 
 		// Meh...
 		if (empty($is_solved) || empty($topicS))
@@ -193,6 +193,69 @@ class TopicSolved extends TopicSolvedTools
 			'class' => 'you_sure '. $this->_statusFields[$inverted],
 			'custom' => 'data-confirm="'. $confirmText .'"'
 		);
+	}
+
+	public function scheduledTask()
+	{
+		// Mod's gotta be enable and the "check staff responses" setting needs to be on! also, at least 1 day has to pass.
+		if (!$this->enable('master') || !$this->enable('staffRespond') || !$this->enable('daysNotResponded'))
+			return true;
+
+		$days = $this->enable('daysNotResponded');
+		$staff = $this->enable('staff') ? json_decode($this->setting('staff'), true) : array();
+
+		// Get the start and end timestamps.
+		$dayIni = new DateTime('-'. $days .' days 00:00');
+		$dayEnd = new DateTime('-'. $days .' days 23:59');
+		$to = $dayEnd->format('U');
+		$from = $dayIni->format('U');
+		$data = array();
+		$solved = array();
+		$not = array();
+
+		// Queries, queries everywhere!
+		$request = $smcFunc['db_query']('', '
+			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group
+			FROM {db_prefix}thank_you_post as t
+				LEFT JOIN {db_prefix}messages as ml ON (ml.id_msg = t.id_last_msg)
+				LEFT JOIN {db_prefix}members as m ON (m.id_member = ml.id_member)
+			WHERE ml.poster_time BETWEEN {int:from} AND {int:to}
+			', array(
+				'from' => $from,
+				'to' => $to,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$data[$row['id_topic']] = $row;
+
+		// Nada?
+		if (empty($data))
+			return true;
+
+		$smcFunc['db_free_result']($request);
+
+		// OK... time to do some checks.
+		foreach ($data as $k => $v)
+		{
+			// Was the OP the last poster too?
+			if ($v['member_start'] == $v['member_last'])
+				$not[] = $v['id_topic'];
+
+			// No? then check if its a staff user.
+			else
+			{
+				$groups = !empty($v['additional_groups']) ? explode(',', $v['additional_groups']) : array();
+
+				$groups[] = $v['id_group'];
+
+				if (!empty($v['id_post_group']))
+					$groups[] = $v['id_post_group'];
+
+				if (array_intersect($groups, $staff))
+					$solved[] = $v['id_topic'];
+			}
+		}
 	}
 }
 
