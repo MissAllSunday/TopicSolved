@@ -20,7 +20,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<require-dir name="Sources/ohara" destination="$sourcedir">Source library</require-dir>
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<require-file name="Sources/TopicSolvedTools.php" destination="$sourcedir">Tools library</require-file>
-		<require-file name="Sources/TopicSolvedAdmin.php" destination="$sourcedir">Admin settings</require-file>
 		<require-file name="_configTopicSolved.json" destination="$boarddir">json config file</require-file>
 		<redirect url="$scripturl?action=admin;area=TopicSolved" timeout="3000"></redirect>
 	</install>
@@ -31,9 +30,9 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<code>removeScheduledTask.php</code>
 		<remove-file name="$sourcedir/TopicSolved.php" />
 		<remove-file name="$sourcedir/TopicSolvedTools.php" />
-		<remove-file name="$sourcedir/TopicSolvedAdmin.php" />
 		<remove-file name="$languagedir/TopicSolved.english.php" />
 		<remove-file name="$themedir/css/TopicSolved.css" />
+		<remove-file name="$boarddir/_configTopicSolved.json" />
 	</uninstall>
 
 </package-info>
