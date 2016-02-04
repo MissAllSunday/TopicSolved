@@ -21,6 +21,7 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<require-file name="Sources/TopicSolvedTools.php" destination="$sourcedir">Tools library</require-file>
 		<require-file name="Sources/TopicSolvedAdmin.php" destination="$sourcedir">Admin settings</require-file>
+		<require-file name="_configTopicSolved.json" destination="$boarddir">json config file</require-file>
 		<redirect url="$scripturl?action=admin;area=TopicSolved" timeout="3000"></redirect>
 	</install>
 
