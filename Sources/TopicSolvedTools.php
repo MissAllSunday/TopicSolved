@@ -31,31 +31,8 @@ class TopicSolvedTools extends Suki\Ohara
 	public $name = 'TopicSolved';
 	public $logType = 69;
 
-	// Define the hooks we are going to use.
-	protected $_availableHooks = array(
-		'actions' => 'integrate_actions',
-		'displayTopic' => 'integrate_display_topic',
-		'displayButtons' => 'integrate_display_buttons',
-		'messageIndex' => 'integrate_message_index',
-		'messageButtons' => 'integrate_messageindex_buttons',
-		'helpAdmin' => 'integrate_helpadmin',
-		'adminArea' => 'integrate_admin_areas',
-		'permissions' => 'integrate_load_permissions',
-		'log' => 'integrate_manage_logs',
-		'logType' => 'integrate_log_types',
-	);
-
-	// Tell SMF where the settings are!
-	protected $_overwriteHooks = array(
-		'adminArea' => array(
-			'func' => 'TopicSolvedAdmin::addAdminArea#',
-			'file' => 'TopicSolvedAdmin.php',
-		),
-		'permissions' => array(
-			'func' => 'TopicSolvedAdmin::addPermissions#',
-			'file' => 'TopicSolvedAdmin.php',
-		),
-	);
+	// Config file required!
+	protected $_useConfig = true;
 
 /* 	Basic 3 stages:
 	0 means normal topics, IE empty class
