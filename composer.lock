@@ -9,20 +9,20 @@
     "packages": [
         {
             "name": "composer/installers",
-            "version": "v1.0.22",
+            "version": "v1.0.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "bd9b14f094c89c8b5804a4e41edeb7853bb85046"
+                "reference": "6213d900e92647831f7a406d5c530ea1f3d4360e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/bd9b14f094c89c8b5804a4e41edeb7853bb85046",
-                "reference": "bd9b14f094c89c8b5804a4e41edeb7853bb85046",
+                "url": "https://api.github.com/repos/composer/installers/zipball/6213d900e92647831f7a406d5c530ea1f3d4360e",
+                "reference": "6213d900e92647831f7a406d5c530ea1f3d4360e",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "1.0.0"
+                "composer-plugin-api": "^1.0"
             },
             "replace": {
                 "roundcube/plugin-installer": "*",
@@ -103,20 +103,20 @@
                 "zend",
                 "zikula"
             ],
-            "time": "2015-10-29 23:28:48"
+            "time": "2016-01-27 12:54:22"
         },
         {
             "name": "suki/ohara",
-            "version": "v1.0.3",
+            "version": "v1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MissAllSunday/Ohara.git",
-                "reference": "5559e62a68c4b2706de2ff114d699b52e67e9586"
+                "reference": "73aa0737ac7ad5e48e3da0b2a3c20e32d5fa59ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MissAllSunday/Ohara/zipball/5559e62a68c4b2706de2ff114d699b52e67e9586",
-                "reference": "5559e62a68c4b2706de2ff114d699b52e67e9586",
+                "url": "https://api.github.com/repos/MissAllSunday/Ohara/zipball/73aa0737ac7ad5e48e3da0b2a3c20e32d5fa59ee",
+                "reference": "73aa0737ac7ad5e48e3da0b2a3c20e32d5fa59ee",
                 "shasum": ""
             },
             "require": {
@@ -147,7 +147,7 @@
                 "SMF",
                 "modifications"
             ],
-            "time": "2016-01-10 23:29:42"
+            "time": "2016-02-15 17:21:47"
         }
     ],
     "packages-dev": [],
