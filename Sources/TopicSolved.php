@@ -102,7 +102,7 @@ class TopicSolved extends TopicSolvedTools
 		);
 
 		// Add our method.
-		$log_functions['topicsolvedlog'] = array($this->name .'Admin.php', $this->name .'Admin::displayLog#', 'disabled' => !$this->enable('master'));
+		$log_functions['topicsolvedlog'] = array($this->name .'.php', $this->name .'::displayLog#', 'disabled' => !$this->enable('master'));
 	}
 
 	public function addDisplayTopic(&$topic_selects, &$topic_tables, &$topic_parameters)
