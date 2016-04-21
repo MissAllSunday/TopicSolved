@@ -64,6 +64,7 @@ class TopicSolved extends TopicSolvedTools
 			'topic' => $topicS,
 			'board' => $board,
 			'is_solved' => $is_solved,
+			'solved_by' => $user_info['id'],
 		), $this->name);
 
 		// Lock the topic if needed.
