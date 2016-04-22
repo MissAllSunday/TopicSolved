@@ -64,7 +64,6 @@ class TopicSolved extends TopicSolvedTools
 			'topic' => $topicS,
 			'board' => $board,
 			'is_solved' => $is_solved,
-			'solved_by' => $user_info['id'],
 		), $this->name);
 
 		// Lock the topic if needed.
@@ -219,16 +218,18 @@ class TopicSolved extends TopicSolvedTools
 
 		// Queries, queries everywhere!
 		$request = $smcFunc['db_query']('', '
-			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved, ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group
+			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved, ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group, l.id_member AS member_solved
 			FROM {db_prefix}topics as t
 				LEFT JOIN {db_prefix}messages as ml ON (ml.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members as m ON (m.id_member = ml.id_member)
+				LEFT JOIN {db_prefix}log_actions as l ON (l.id_topic = t.id_topic AND l.id_log = {int:logType})
 			WHERE t.id_board IN ({array_int:boards})
 				AND (ml.poster_time BETWEEN {int:from} AND {int:to})
 			', array(
 				'from' => $from,
 				'to' => $to,
 				'boards' => $tBoards,
+				'logType' => $this->logType,
 			)
 		);
 
@@ -310,7 +311,7 @@ class TopicSolved extends TopicSolvedTools
 			'label' => $this->text('modName'),
 			'file' => $this->name .'.php',
 			'function' => $this->name .'::adminCall#',
-			'icon' => 'posts',
+			'icon' => 'settings',
 			'subsections' => array(
 				'settings' => array($this->text('modName')),
 			),
