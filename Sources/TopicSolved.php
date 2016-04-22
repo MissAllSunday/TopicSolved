@@ -218,7 +218,7 @@ class TopicSolved extends TopicSolvedTools
 
 		// Queries, queries everywhere!
 		$request = $smcFunc['db_query']('', '
-			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved, ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group, l.id_member AS member_solved
+			SELECT t.id_topic, t.id_first_msg, t.id_member_started AS member_start, t.id_last_msg, t.is_solved, ml.id_member AS member_last, ml.poster_time, m.id_post_group, m.additional_groups, m.id_group, l.id_member AS member_solved, l.extra
 			FROM {db_prefix}topics as t
 				LEFT JOIN {db_prefix}messages as ml ON (ml.id_msg = t.id_last_msg)
 				LEFT JOIN {db_prefix}members as m ON (m.id_member = ml.id_member)
@@ -245,6 +245,8 @@ class TopicSolved extends TopicSolvedTools
 		// OK... time to do some checks.
 		foreach ($data as $k => $v)
 		{
+			$data['extra'] = !empty($data['extra']) ? json_decode($data['extra'], true) : array();
+
 			// Was the OP the last poster?
 			if ($v['member_start'] == $v['member_last'])
 				$not[] = $k;
