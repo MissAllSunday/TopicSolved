@@ -247,8 +247,8 @@ class TopicSolved extends TopicSolvedTools
 		{
 			$data['extra'] = !empty($data['extra']) ? json_decode($data['extra'], true) : array();
 
-			// Was the OP the last poster?
-			if ($v['member_start'] == $v['member_last'])
+			// Was the OP the last poster and the one who marked the topic?
+			if ($v['member_start'] == $v['member_last'] && $v['member_last'] != $v['member_solved'])
 				$not[] = $k;
 
 			// No? then check if its a staff user.
@@ -261,7 +261,7 @@ class TopicSolved extends TopicSolvedTools
 				if (!empty($v['id_post_group']))
 					$groups[] = $v['id_post_group'];
 
-				if (array_intersect($groups, $staff))
+				if (array_intersect($groups, $staff) && $v['member_last'] != $v['member_solved'])
 					$solved[] = $k;
 			}
 		}
