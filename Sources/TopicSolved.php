@@ -129,6 +129,7 @@ class TopicSolved extends TopicSolvedTools
 		// Since we're already here...
 		loadCSSFile($this->bootstrapCDN, array('external' => true));
 		loadCSSFile($this->name .'.css');
+		loadLanguage($this->name);
 	}
 
 	public function addMessageButtons()
