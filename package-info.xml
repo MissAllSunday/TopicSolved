@@ -6,7 +6,7 @@
 	<version>1.0</version>
 	<type>modification</type>
 
-	<install for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
+	<install for="2.1 Beta 3, 2.1 Beta 4, 2.1 RC 1, 2.1 RC 2, 2.1 - 2.1.99">
 		<readme parsebbc="true">README.txt</readme>
 		<license type="inline" parsebbc="false">
 This Source Code Form is subject to the terms of the Mozilla Public
@@ -20,11 +20,10 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<require-dir name="Sources/ohara" destination="$sourcedir">Source library</require-dir>
 		<require-file name="Sources/TopicSolved.php" destination="$sourcedir">The file that handles everything</require-file>
 		<require-file name="Sources/TopicSolvedTools.php" destination="$sourcedir">Tools library</require-file>
-		<require-file name="_configTopicSolved.json" destination="$boarddir">json config file</require-file>
 		<redirect url="$scripturl?action=admin;area=TopicSolved" timeout="3000"></redirect>
 	</install>
 
-	<uninstall for="2.1 Beta 2, 2.1 Beta 3, 2.1 - 2.1.99">
+	<uninstall for="2.1 Beta 3, 2.1 Beta 4, 2.1 RC 1, 2.1 RC 2, 2.1 - 2.1.99">
 		<hook function="TopicSolved::runTimeHooks" hook="integrate_load_theme" file="$sourcedir/TopicSolved.php" object="true" reverse="true"></hook>
 		<database>install.php</database>
 		<code>removeScheduledTask.php</code>
@@ -32,7 +31,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 		<remove-file name="$sourcedir/TopicSolvedTools.php" />
 		<remove-file name="$languagedir/TopicSolved.english.php" />
 		<remove-file name="$themedir/css/TopicSolved.css" />
-		<remove-file name="$boarddir/_configTopicSolved.json" />
 	</uninstall>
 
 </package-info>
