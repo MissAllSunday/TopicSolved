@@ -3,7 +3,7 @@
 /**
  * @package Topic Solved mod
  * @version 1.0
- * @author Suki <missallsunday@simplemachines.org>
+ * @author Jessica González <missallsunday@simplemachines.org>
  * @copyright 2016 Suki
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  */
