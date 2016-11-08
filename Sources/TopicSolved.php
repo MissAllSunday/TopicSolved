@@ -11,9 +11,11 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-// Use Ohara! manually :(
-require_once ($sourcedir .'/ohara/src/Suki/Ohara.php');
+// Ohara autoload!
+require_once $sourcedir .'/ohara/src/Suki/autoload.php';
 require_once ($sourcedir .'/TopicSolvedTools.php');
+
+use Suki\Ohara;
 
 class TopicSolved extends TopicSolvedTools
 {
@@ -30,14 +32,14 @@ class TopicSolved extends TopicSolvedTools
 		global $board, $user_info;
 
 		// Get the solved ID.
-		$is_solved = $this->data('is_solved');
-		$topicS = $this->data('topic');
-		$starter = $this->data('starter');
+		$is_solved = $this['data']->get('is_solved');
+		$topicS = $this['data']->get('topic');
+		$starter = $this['data']->get('starter');
 		$staff = $this->enable('staff') ? json_decode($this->setting('staff'), true) : array();
 
 		// Meh...
 		if (empty($is_solved) || empty($topicS))
-			return redirectexit();
+			return $this['tools']->redirect();
 
 		// Change it!
 		$this->changeStatus(array(
@@ -68,7 +70,7 @@ class TopicSolved extends TopicSolvedTools
 		}
 
 		// Go back.
-		return redirectexit('topic='. $topicS);
+		return $this['tools']->redirect('topic='. $topicS);
 	}
 
 	public function addLogType(&$log_types)
@@ -144,7 +146,7 @@ class TopicSolved extends TopicSolvedTools
 		// Because reasons!
 		foreach ($this->getStatus() as $class => $icon)
 			$injectJS  .= '
-		$(".'. $this->sanitize($class) .'").children(".board_icon").empty().addClass("'. $this->sanitize($icon) .'");';
+		$(".'. $this['data']->sanitize($class) .'").children(".board_icon").empty().addClass("'. $this['data']->sanitize($icon) .'");';
 
 		// Close the JS
 		$injectJS  .= '
@@ -169,7 +171,7 @@ class TopicSolved extends TopicSolvedTools
 		// Invert the roles!
 		$inverted = ($context['topicinfo']['is_solved'] != 2) ? 2 : 1;
 
-		$confirmText = $this->parser($this->text('mark_as_solved_sure'), array(
+		$confirmText = $this['tools']->parser($this->text('mark_as_solved_sure'), array(
 			'status' => $this->text($this->_statusFields[$inverted])
 		));
 
@@ -299,31 +301,38 @@ class TopicSolved extends TopicSolvedTools
 		$areas['config']['areas'][$this->name] = array(
 			'label' => $this->text('modName'),
 			'file' => $this->name .'.php',
-			'function' => $this->name .'::adminCall#',
+			'function' => array($this, 'adminCall'),
 			'icon' => 'settings',
 			'subsections' => array(
 				'settings' => array($this->text('modName')),
 			),
 		);
-		$areas['maintenance']['areas']['logs']['subsections']['topicsolvedlog'] = array($this->text('modName'), 'TopicSolved::displayLog#', 'disabled' => !$this->enable('master'));
+		$areas['maintenance']['areas']['logs']['subsections']['topicsolvedlog'] = array($this->text('modName'), array($this, 'displayLog'), 'disabled' => !$this->enable('master'));
 	}
 
 	public function adminCall()
 	{
 		global $context;
+
 		require_once($this->sourceDir . '/ManageSettings.php');
+
 		$context['page_title'] = $this->text('modName');
+		$sa = $this['data']->get('sa', 'settings');
+
 		// Redundant much!?
 		$subActions = array(
 			'settings' => 'settings',
 		);
+
 		loadGeneralSettingParameters($subActions, 'settings');
+
 		$context[$context['admin_menu_name']]['tab_data'] = array(
 			'tabs' => array(
 				'settings' => array(),
 			),
 		);
-		$this->_sa = isset($subActions[$this->data('sa')]) ? $subActions[$this->data('sa')] : 'settings';
+
+		$this->_sa = isset($subActions[$sa]) ? $subActions[$sa] : 'settings';
 		$this->{$this->_sa}();
 	}
 
@@ -403,7 +412,7 @@ class TopicSolved extends TopicSolvedTools
 		{
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area='. $this->name .';sa='. $this->_sa);
+			$this['tools']->redirect('action=admin;area='. $this->name .';sa='. $this->_sa);
 		}
 
 		prepareDBSettingContext($config_vars);
@@ -423,7 +432,7 @@ class TopicSolved extends TopicSolvedTools
 			checkSession();
 			validateToken('mod-ml');
 
-			$deleteData = $this->data($this->name);
+			$deleteData = $this['data']->get($this->name);
 
 			if ((!empty($deleteData) && $this->validate('remove')))
 				$this->deleteTopicLogs($deleteData);
@@ -470,7 +479,7 @@ class TopicSolved extends TopicSolvedTools
 						'class' => 'lefttext',
 					),
 					'data' => array(
-						'function' => function ($data) use ($that)
+						'function' => function ($data)
 						{
 							return $data['link'];
 						},
@@ -482,7 +491,7 @@ class TopicSolved extends TopicSolvedTools
 						'class' => 'lefttext',
 					),
 					'data' => array(
-						'function' => function ($data) use ($that)
+						'function' => function ($data)
 						{
 							return $data['moderator_link'] .' - '. $data['position'];
 						},
@@ -494,7 +503,7 @@ class TopicSolved extends TopicSolvedTools
 						'class' => 'lefttext',
 					),
 					'data' => array(
-						'function' => function ($data) use ($that)
+						'function' => function ($data)
 						{
 							return $data['is_solved'] .' - '. $data['time'];
 						},

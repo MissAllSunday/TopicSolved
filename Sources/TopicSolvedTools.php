@@ -11,9 +11,6 @@
 if (!defined('SMF'))
 	die('No direct access!');
 
-// Ohara autoload!
-require_once $sourcedir .'/ohara/src/Suki/autoload.php';
-
 use Suki\Ohara;
 
 class TopicSolvedTools extends Suki\Ohara
@@ -23,7 +20,7 @@ class TopicSolvedTools extends Suki\Ohara
 	public $logType = 69;
 
 	// Config file required!
-	protected $_useConfig = true;
+	public $useConfig = true;
 
 /* 	Basic 3 stages:
 	0 means normal topics, IE empty class
@@ -42,7 +39,7 @@ class TopicSolvedTools extends Suki\Ohara
 	{
 		global $smcFunc;
 
-		if (empty($topic) )
+		if (empty($topic))
 			return false;
 
 		// Work with arrays.
