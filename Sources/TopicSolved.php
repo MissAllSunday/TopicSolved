@@ -408,7 +408,7 @@ class TopicSolved extends TopicSolvedTools
 			return prepareDBSettingContext($config_vars);
 		}
 
-		if ($this->validate('save'))
+		if ($this['data']->validate('save'))
 		{
 			checkSession();
 			saveDBSettings($config_vars);
@@ -427,17 +427,17 @@ class TopicSolved extends TopicSolvedTools
 		loadLanguage('Modlog');
 
 		// Deleting?
-		if ($this->validate('remove') || $this->validate('removeall'))
+		if ($this['data']->validate('remove') || $this['data']->validate('removeall'))
 		{
 			checkSession();
 			validateToken('mod-ml');
 
 			$deleteData = $this['data']->get($this->name);
 
-			if ((!empty($deleteData) && $this->validate('remove')))
+			if ((!empty($deleteData) && $this['data']->validate('remove')))
 				$this->deleteTopicLogs($deleteData);
 
-			elseif($this->validate('removeall'))
+			elseif($this['data']->validate('removeall'))
 				$this->deleteTopicLogs();
 		}
 
